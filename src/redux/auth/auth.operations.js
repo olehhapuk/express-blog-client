@@ -63,6 +63,6 @@ export const fetchUserData = () => (dispatch, getState) => {
     })
     .catch((error) => {
       clearToken();
-      dispatch(actions.fetchUserDataError(error.response.data.message));
+      dispatch(actions.fetchUserDataError(error.message));
     });
 };

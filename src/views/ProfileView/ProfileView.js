@@ -1,4 +1,4 @@
-import { useState, useEffect, useReducer } from 'react';
+import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
   Tabs,
@@ -8,22 +8,20 @@ import {
   TabPanel,
   Container,
   Stack,
-  HStack,
   Heading,
   Text,
   Avatar,
-  Button,
   CircularProgress,
   Flex,
   StatGroup,
   Stat,
   StatLabel,
   StatNumber,
-  StatHelpText,
 } from '@chakra-ui/react';
+import axios from 'axios';
 
 import { authSelectors, authOperations } from '../../redux/auth';
-import { PostsList, PostItem } from '../../components';
+import { PostsList } from '../../components';
 
 function ProfileView() {
   const dispatch = useDispatch();
@@ -32,10 +30,40 @@ function ProfileView() {
   const userLoading = useSelector(authSelectors.getLoading);
 
   const [tabIndex, setTabIndex] = useState(0);
+  const [likeLoadingId, setLikeLoadingId] = useState(null);
+  const [readLaterLoadingId, setReadLaterLoadingId] = useState(null);
 
   useEffect(() => {
     dispatch(authOperations.fetchUserData());
   }, [dispatch]);
+
+  function like(postId) {
+    setLikeLoadingId(postId);
+
+    axios({
+      method: 'PATCH',
+      url: `/posts/${postId}/like`,
+    })
+      .then(() => {
+        dispatch(authOperations.fetchUserData());
+      })
+      .catch((error) => console.dir(error))
+      .finally(() => setLikeLoadingId(null));
+  }
+
+  function readLater(postId) {
+    setReadLaterLoadingId(postId);
+
+    axios({
+      method: 'PATCH',
+      url: `/posts/${postId}/read-later`,
+    })
+      .then(() => {
+        dispatch(authOperations.fetchUserData());
+      })
+      .catch((error) => console.dir(error))
+      .finally(() => setReadLaterLoadingId(null));
+  }
 
   return (
     <Container maxW="container.xl">
@@ -75,10 +103,20 @@ function ProfileView() {
 
               <TabPanels>
                 <TabPanel>
-                  <PostsList posts={user.posts} />
+                  <PostsList
+                    posts={user.posts}
+                    onLike={like}
+                    onReadLater={readLater}
+                  />
                 </TabPanel>
                 <TabPanel>
-                  <PostsList posts={user.readingList} />
+                  <PostsList
+                    posts={user.readingList}
+                    onLike={like}
+                    onReadLater={readLater}
+                    likeLoadingId={likeLoadingId}
+                    readLaterLoadingId={readLaterLoadingId}
+                  />
                 </TabPanel>
               </TabPanels>
             </Tabs>

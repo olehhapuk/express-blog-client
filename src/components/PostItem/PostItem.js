@@ -13,6 +13,8 @@ import {
   IconButton,
   Icon,
   Button,
+  Image,
+  Box,
 } from '@chakra-ui/react';
 import { useSelector } from 'react-redux';
 
@@ -38,14 +40,12 @@ function PostItem({
     user && user.readingList.find((post) => post._id === _id);
 
   return (
-    <LinkBox
-      as="article"
-      key={_id}
-      borderWidth="1px"
-      borderRadius="lg"
-      textAlign="left"
-    >
-      {thumbnailUrl && <img src={thumbnailUrl} alt={title} />}
+    <LinkBox as="article" borderWidth="1px" borderRadius="lg" textAlign="left">
+      {thumbnailUrl && (
+        <Box>
+          <Image src={thumbnailUrl} alt={title} width="100%" />
+        </Box>
+      )}
       <Stack spacing={2} padding={3}>
         <LinkOverlay as={Link} to={`${urls.post}/${_id}`}>
           <Heading size="lg">{title}</Heading>
