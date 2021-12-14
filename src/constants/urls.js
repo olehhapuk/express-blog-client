@@ -3,7 +3,6 @@ export const urls = {
   login: '/login',
   register: '/register',
   profile: '/profile',
-  user: '/user',
   createPost: '/create-post',
   editPost: '/edit-post',
   post: '/post',

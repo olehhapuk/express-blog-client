@@ -40,20 +40,10 @@ export const routes = [
     ),
   },
   {
-    key: 'user',
-    path: `${urls.user}/:userId`,
+    key: 'profile',
+    path: `${urls.profile}/:userId`,
     exact: true,
     element: <ProfileView />,
-  },
-  {
-    key: 'profile',
-    path: `${urls.profile}`,
-    exact: true,
-    element: (
-      <AuthGate.AuthRequired>
-        <ProfileView />
-      </AuthGate.AuthRequired>
-    ),
   },
   {
     key: 'createPost',

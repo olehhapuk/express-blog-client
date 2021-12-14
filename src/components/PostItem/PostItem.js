@@ -15,6 +15,7 @@ import {
   Button,
   Image,
   Box,
+  Link as ChakraLink,
 } from '@chakra-ui/react';
 import { useSelector } from 'react-redux';
 
@@ -24,6 +25,7 @@ import { authSelectors } from '../../redux/auth';
 function PostItem({
   _id,
   title,
+  author,
   tags,
   usersLiked,
   thumbnailUrl,
@@ -50,6 +52,13 @@ function PostItem({
         <LinkOverlay as={Link} to={`${urls.post}/${_id}`}>
           <Heading size="lg">{title}</Heading>
         </LinkOverlay>
+        <ChakraLink
+          as={Link}
+          color="teal.500"
+          to={`${urls.profile}/${author._id}`}
+        >
+          {author.fullName}
+        </ChakraLink>
         <Wrap spacing={2}>
           {tags.map((tag) => (
             <Tag key={tag._id} variant="outline">

@@ -22,6 +22,7 @@ function Navbar() {
   const [search, setSearch] = useState('');
 
   const isAuthenticated = useSelector(authSelectors.isAuthenticated);
+  const user = useSelector(authSelectors.getUser);
 
   const dispatch = useDispatch();
 
@@ -62,7 +63,7 @@ function Navbar() {
                     <MenuItem as={Link} to={urls.home}>
                       Home
                     </MenuItem>
-                    <MenuItem as={Link} to={urls.profile}>
+                    <MenuItem as={Link} to={`${urls.profile}/${user._id}`}>
                       My Profile
                     </MenuItem>
                     <MenuItem onClick={logout}>Logout</MenuItem>
