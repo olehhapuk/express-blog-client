@@ -42,23 +42,29 @@ function PostItem({
     user && user.readingList.find((post) => post._id === _id);
 
   return (
-    <LinkBox as="article" borderWidth="1px" borderRadius="lg" textAlign="left">
-      {thumbnailUrl && (
-        <Box>
-          <Image src={thumbnailUrl} alt={title} width="100%" />
-        </Box>
-      )}
+    <LinkBox
+      as="article"
+      borderWidth="1px"
+      borderRadius="lg"
+      textAlign="left"
+      overflow="hidden"
+    >
+      {thumbnailUrl && <Image src={thumbnailUrl} alt={title} width="100%" />}
       <Stack spacing={2} padding={3}>
         <LinkOverlay as={Link} to={`${urls.post}/${_id}`}>
           <Heading size="lg">{title}</Heading>
         </LinkOverlay>
-        <ChakraLink
-          as={Link}
-          color="teal.500"
-          to={`${urls.profile}/${author._id}`}
-        >
-          {author.fullName}
-        </ChakraLink>
+        {author ? (
+          <ChakraLink
+            as={Link}
+            color="teal.500"
+            to={`${urls.profile}/${author._id}`}
+          >
+            {author.fullName}
+          </ChakraLink>
+        ) : (
+          <Text color="gray.500">Deleted account</Text>
+        )}
         <Wrap spacing={2}>
           {tags.map((tag) => (
             <Tag key={tag._id} variant="outline">
@@ -67,24 +73,29 @@ function PostItem({
           ))}
         </Wrap>
         <HStack justify="space-between">
-          <HStack>
-            <IconButton
-              onClick={() => onLike(_id)}
-              isLoading={likeLoadingId === _id}
-              disabled={!isAuthenticated}
-            >
-              <Icon as={isLiked ? BsHeartFill : BsHeart} />
-            </IconButton>
+          <HStack alignItems="center">
+            {isAuthenticated ? (
+              <IconButton
+                onClick={() => onLike(_id)}
+                isLoading={likeLoadingId === _id}
+                disabled={!isAuthenticated}
+              >
+                <Icon as={isLiked ? BsHeartFill : BsHeart} />
+              </IconButton>
+            ) : (
+              <Icon as={BsHeart} m={2} />
+            )}
             <Text>{usersLiked}</Text>
           </HStack>
-          <Button
-            variant="outline"
-            onClick={() => onReadLater(_id)}
-            isLoading={readLaterLoadingId === _id}
-            disabled={!isAuthenticated}
-          >
-            {isInReadingList ? 'Remove from reading list' : 'Read later'}
-          </Button>
+          {isAuthenticated && (
+            <Button
+              variant="outline"
+              onClick={() => onReadLater(_id)}
+              isLoading={readLaterLoadingId === _id}
+            >
+              {isInReadingList ? 'Remove from reading list' : 'Read later'}
+            </Button>
+          )}
         </HStack>
       </Stack>
     </LinkBox>

@@ -7,11 +7,11 @@ import {
   TabPanel,
   Container,
   Stack,
+  Flex,
   Heading,
   Text,
   Avatar,
   CircularProgress,
-  Flex,
   StatGroup,
   Stat,
   StatLabel,
@@ -20,6 +20,7 @@ import {
   AlertIcon,
   AlertTitle,
   AlertDescription,
+  Button,
 } from '@chakra-ui/react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
@@ -38,10 +39,13 @@ function ProfileView() {
   const [userData, setUserData] = useState(null);
   const [userDataLoading, setUserDataLoading] = useState(false);
   const [userDataError, setUserDataError] = useState(null);
+  const [followLoading, setFollowLoading] = useState(false);
+  const [followError, setFollowError] = useState(null);
 
   const authUser = useSelector(authSelectors.getUser);
 
-  const isAuthUser = userId === authUser._id;
+  const isAuthUser = authUser && userId === authUser._id;
+  const isFollowing = authUser && authUser.following.includes(userId);
 
   useEffect(fetchUserData, [userId]);
   useEffect(() => {
@@ -90,11 +94,40 @@ function ProfileView() {
       .finally(() => setReadLaterLoadingId(null));
   }
 
+  function follow() {
+    setFollowLoading(true);
+
+    axios({
+      method: 'POST',
+      url: `/users/follow`,
+      data: {
+        followId: userId,
+      },
+    })
+      .then((res) => {
+        dispatch(authOperations.fetchUserData());
+        fetchUserData();
+        console.log(res.data);
+      })
+      .catch((error) => setFollowError(error))
+      .finally(() => setFollowLoading(false));
+  }
+
   return (
     <Container maxW="container.xl">
       {userDataLoading && (
-        <Flex justifyContent="center">
-          <CircularProgress isIndeterminate />
+        <Flex
+          alignItems="center"
+          justifyContent="center"
+          position="fixed"
+          backgroundColor="rgba(0, 0, 0, 0.7)"
+          top="0"
+          bottom="0"
+          left="0"
+          right="0"
+          zIndex="99"
+        >
+          <CircularProgress isIndeterminate trackColor="gray.300" />
         </Flex>
       )}
       {userDataError && !userDataLoading && (
@@ -106,8 +139,7 @@ function ProfileView() {
           </AlertDescription>
         </Alert>
       )}
-
-      {!userDataLoading && !userDataError && userData && (
+      {userData && (
         <Container maxW="container.sm">
           <Stack spacing={2} textAlign="center" alignItems="center">
             <Avatar
@@ -115,11 +147,11 @@ function ProfileView() {
               name={userData.fullName}
               size="xl"
             />
-            <Heading>
-              {userData.fullName} {isAuthUser && 'auth'}
-            </Heading>
+
+            <Heading>{userData.fullName}</Heading>
             <Text>{userData.description}</Text>
-            <StatGroup w="xs">
+
+            <StatGroup w="200px">
               <Stat>
                 <StatLabel>Followers</StatLabel>
                 <StatNumber>{userData.followers.length}</StatNumber>
@@ -129,6 +161,18 @@ function ProfileView() {
                 <StatNumber>{userData.following.length}</StatNumber>
               </Stat>
             </StatGroup>
+
+            {isAuthUser ? (
+              <Button colorScheme="blue">Edit Profile</Button>
+            ) : (
+              <Button
+                colorScheme="blue"
+                onClick={follow}
+                isLoading={followLoading}
+              >
+                {isFollowing ? 'Unfollow' : 'Follow'}
+              </Button>
+            )}
 
             <Tabs
               index={tabIndex}

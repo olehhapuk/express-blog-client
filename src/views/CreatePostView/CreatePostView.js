@@ -27,14 +27,13 @@ function CreatePostView() {
       data,
     })
       .then((res) => {
-        console.log(res.data);
         navigate(`${urls.post}/${res.data._id}`);
       })
       .catch((error) => {
         console.dir(error);
         setError(error);
-      })
-      .finally(() => setLoading(false));
+        setLoading(false);
+      });
   }
 
   return (
