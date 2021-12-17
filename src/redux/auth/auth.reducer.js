@@ -3,12 +3,16 @@ import { persistCombineReducers } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 
 import { authActions as actions } from './';
+import { clearToken } from '../../utils/setAuthHeader';
 
 const tokenReducer = createReducer(null, {
   [actions.loginSuccess]: (_, { payload }) => payload.token,
   [actions.registerSuccess]: (_, { payload }) => payload.token,
   [actions.fetchUserDataError]: () => null,
-  [actions.logout]: () => null,
+  [actions.logout]: () => {
+    clearToken();
+    return null;
+  },
 });
 
 const userReducer = createReducer(null, {

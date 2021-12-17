@@ -1,14 +1,7 @@
 import axios from 'axios';
 
 import { authActions as actions, authSelectors as selectors } from './';
-
-function setToken(token) {
-  axios.defaults.headers.common.Authorization = `Bearer ${token}`;
-}
-
-function clearToken() {
-  axios.defaults.headers.common.Authorization = null;
-}
+import { setToken, clearToken } from '../../utils/setAuthHeader';
 
 export const login = (data) => (dispatch) => {
   dispatch(actions.loginRequest());
