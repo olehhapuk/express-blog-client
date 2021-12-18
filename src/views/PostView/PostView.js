@@ -53,6 +53,7 @@ function PostView() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [replyToComment, setReplyToComment] = useState(null);
+  const [commentsLoading, setCommentsLoading] = useState(false);
 
   const { postId } = useParams();
 
@@ -67,7 +68,6 @@ function PostView() {
     })
       .then((res) => {
         const comments = formatComments(res.data.comments);
-        console.log(comments);
         setData({
           ...res.data,
           comments,
@@ -78,7 +78,7 @@ function PostView() {
   }
 
   function createComment(text) {
-    setLoading(true);
+    setCommentsLoading(true);
 
     axios({
       method: 'POST',
@@ -86,14 +86,14 @@ function PostView() {
       data: {
         text,
         parentPost: postId,
-        parentComment: replyToComment._id,
+        parentComment: replyToComment?._id,
       },
     })
       .then((res) => {
         fetchPost();
       })
       .catch((error) => setError(error))
-      .finally(() => setLoading(false));
+      .finally(() => setCommentsLoading(false));
   }
 
   return (
@@ -136,6 +136,11 @@ function PostView() {
             </HStack>
           )}
           <CreateCommentForm onSubmit={createComment} />
+          {commentsLoading && (
+            <Flex justify="center">
+              <CircularProgress isIndeterminate />
+            </Flex>
+          )}
           {data.comments && (
             <CommentsList
               comments={data.comments}
