@@ -55,7 +55,7 @@ function HomeView() {
       method: 'GET',
       url: '/posts',
     })
-      .then((res) => postsDispatch({ type: 'SET', payload: res.data }))
+      .then((res) => postsDispatch({ type: 'SET', payload: res.data.posts }))
       .catch((error) => setError(error))
       .finally(() => setPostsLoading(false));
   }, []);

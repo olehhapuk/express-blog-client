@@ -12,36 +12,47 @@ import {
 } from '@chakra-ui/react';
 import { HamburgerIcon } from '@chakra-ui/icons';
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
+import qs from 'query-string';
 
 import { urls } from '../../constants/urls';
 import { authSelectors, authActions } from '../../redux/auth';
 
 function Navbar() {
-  const [search, setSearch] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
 
   const isAuthenticated = useSelector(authSelectors.isAuthenticated);
   const user = useSelector(authSelectors.getUser);
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   function logout() {
     dispatch(authActions.logout());
+  }
+
+  function search(e) {
+    e.preventDefault();
+
+    const queryString = qs.stringify({
+      search: searchQuery,
+    });
+    navigate(`${urls.search}?${queryString}`);
   }
 
   return (
     <Box as="nav" py={5}>
       <Container maxW="container.xl">
         <HStack justify="space-between">
-          <HStack as="form" maxW="320px">
+          <HStack as="form" maxW="320px" onSubmit={search}>
             <Input
               type="search"
               autoComplete="off"
               name="search"
               placeholder="Search..."
-              value={search}
-              onChange={({ target }) => setSearch(target.value)}
+              value={searchQuery}
+              onChange={({ target }) => setSearchQuery(target.value)}
             />
             <Button type="submit" colorScheme="blue">
               Search
