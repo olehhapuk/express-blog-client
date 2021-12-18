@@ -58,11 +58,11 @@ function RegisterForm({ onSubmit }) {
       lastName: 'Doe',
       location: 'England',
       avatarUrl:
-        'https://nyaa.shikimori.one/system/user_images/original/642029/1310230.jpg',
+        'https://www.seekpng.com/png/detail/110-1100707_person-avatar-placeholder.png',
       githubUrl: 'https://github.com/john_doe',
       description: "I'm John Doe",
       work: 'Engineer',
-      hobby: 'GameDev',
+      hobby: 'Writing',
       birthDate: defaultDate,
     },
     onSubmit: (values) => {

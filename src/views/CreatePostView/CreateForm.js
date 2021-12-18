@@ -22,11 +22,10 @@ const validationSchema = Yup.object().shape({
 function CreateForm({ onSubmit, loading }) {
   const formik = useFormik({
     initialValues: {
-      thumbnailUrl:
-        'https://otakusnotes.com/wp-content/uploads/2021/07/Power-of-Makima-in-Chainsaw-Man-Explained.jpg',
-      title: 'Makima',
-      body: '# Makima\nMakima is the best girl!',
-      tags: 'makima, anime, girl',
+      thumbnailUrl: '',
+      title: '',
+      body: '',
+      tags: '',
     },
     validationSchema,
     onSubmit,
