@@ -11,8 +11,8 @@ import {
   IconButton,
 } from '@chakra-ui/react';
 import { HamburgerIcon } from '@chakra-ui/icons';
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import qs from 'query-string';
 
@@ -27,6 +27,16 @@ function Navbar() {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.pathname !== urls.search) {
+      setSearchQuery('');
+    } else {
+      const searchParams = qs.parse(location.search);
+      setSearchQuery(searchParams.search);
+    }
+  }, [location.pathname]);
 
   function logout() {
     dispatch(authActions.logout());
@@ -53,6 +63,7 @@ function Navbar() {
               placeholder="Search..."
               value={searchQuery}
               onChange={({ target }) => setSearchQuery(target.value)}
+              required
             />
             <Button type="submit" colorScheme="blue">
               Search

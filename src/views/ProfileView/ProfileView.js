@@ -84,7 +84,7 @@ function ProfileView() {
 
     axios({
       method: 'PATCH',
-      url: `/posts/${postId}/read-later`,
+      url: `/posts/${postId}/save`,
     })
       .then(() => {
         fetchUserData();

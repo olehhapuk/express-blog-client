@@ -41,7 +41,6 @@ function CreateForm({ onSubmit, loading }) {
       <Stack spacing={3}>
         <FormControl
           isInvalid={formik.errors.thumbnailUrl && formik.touched.thumbnailUrl}
-          isRequired
         >
           <Input
             type="url"
@@ -93,10 +92,7 @@ function CreateForm({ onSubmit, loading }) {
           )}
         </FormControl>
 
-        <FormControl
-          isInvalid={formik.errors.tags && formik.touched.tags}
-          isRequired
-        >
+        <FormControl isInvalid={formik.errors.tags && formik.touched.tags}>
           <Input
             type="text"
             autoComplete="off"

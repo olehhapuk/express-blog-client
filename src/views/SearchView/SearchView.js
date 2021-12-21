@@ -44,13 +44,15 @@ function postsReducer(state, { type, payload }) {
   }
 }
 
+let mounted = false;
+
 function SearchView() {
   const [postsLoading, setPostsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [likeLoadingId, setLikeLoadingId] = useState(null);
   const [readLaterLoadingId, setReadLaterLoadingId] = useState(null);
   const [pagesCount, setPagesCount] = useState(1);
-  const [activePage, setActivePage] = useState(1);
+  const [activePage, setActivePage] = useState({ value: 1 });
 
   const [posts, postsDispatch] = useReducer(postsReducer, []);
 
@@ -60,13 +62,23 @@ function SearchView() {
   const searchParams = qs.parse(search);
 
   useEffect(() => {
-    postsDispatch({ type: 'CLEAR' });
-    setActivePage(1);
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (mounted) {
+      postsDispatch({ type: 'CLEAR' });
+      setActivePage({ value: 1 });
+    } else {
+      mounted = true;
+    }
   }, [searchParams.search]);
 
   useEffect(() => {
     fetchPosts();
-  }, [searchParams.search, activePage]);
+  }, [activePage]);
 
   function fetchPosts() {
     setPostsLoading(true);
@@ -76,7 +88,7 @@ function SearchView() {
       url: '/posts',
       params: {
         search: searchParams.search,
-        page: activePage,
+        page: activePage.value,
         perPage: 1,
       },
     })
@@ -108,7 +120,7 @@ function SearchView() {
 
     axios({
       method: 'PATCH',
-      url: `/posts/${postId}/read-later`,
+      url: `/posts/${postId}/save`,
     })
       .then((res) => {
         postsDispatch({ type: 'READ_LATER', payload: res.data });
@@ -119,7 +131,7 @@ function SearchView() {
   }
 
   function loadMore() {
-    setActivePage(activePage + 1);
+    setActivePage({ value: activePage.value + 1 });
   }
 
   return (
@@ -145,7 +157,7 @@ function SearchView() {
           onReadLater={readLater}
         />
       )}
-      {!error && activePage < pagesCount && (
+      {!error && activePage.value < pagesCount && (
         <Button colorScheme="blue" onClick={loadMore} isLoading={postsLoading}>
           Load More
         </Button>

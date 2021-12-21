@@ -20,7 +20,10 @@ function CommentItem({ comment, onReply, onLiked }) {
 
   const user = useSelector(authSelectors.getUser);
 
-  const isLiked = comment && user && user.likedComments.includes(comment._id);
+  const isLiked =
+    comment &&
+    user &&
+    user.likesComments.find(({ _id }) => _id === comment._id);
 
   function like() {
     setLoading(true);

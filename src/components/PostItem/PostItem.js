@@ -14,7 +14,6 @@ import {
   Icon,
   Button,
   Image,
-  Box,
   Link as ChakraLink,
 } from '@chakra-ui/react';
 import { useSelector } from 'react-redux';
@@ -40,6 +39,16 @@ function PostItem({
   const isLiked = user && user.likedPosts.find((post) => post._id === _id);
   const isInReadingList =
     user && user.readingList.find((post) => post._id === _id);
+
+  const colors = [
+    'bluw',
+    'red',
+    'cyan',
+    'green',
+    'twiiter',
+    'facebook',
+    'telegram',
+  ];
 
   return (
     <LinkBox
@@ -67,7 +76,11 @@ function PostItem({
         )}
         <Wrap spacing={2}>
           {tags.map((tag) => (
-            <Tag key={tag._id} variant="outline">
+            <Tag
+              key={tag._id}
+              variant="outline"
+              colorScheme={colors[Math.floor(Math.random() * colors.length)]}
+            >
               <TagLabel>{tag.name}</TagLabel>
             </Tag>
           ))}
