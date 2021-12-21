@@ -126,7 +126,7 @@ function PostView() {
               __html: sanitize(marked.parse(data.body)),
             }}
           />
-          {/* <hr />
+          <hr />
           <Heading size="md">Comments</Heading>
           {replyToComment && (
             <HStack>
@@ -148,7 +148,7 @@ function PostView() {
               comments={data.comments}
               onReply={setReplyToComment}
             />
-          )} */}
+          )}
         </Stack>
       )}
     </Container>
