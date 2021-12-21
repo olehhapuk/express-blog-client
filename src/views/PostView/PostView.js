@@ -67,7 +67,9 @@ function PostView() {
       url: `/posts/${postId}`,
     })
       .then((res) => {
-        const comments = formatComments(res.data.comments);
+        const comments = res.data.comments
+          ? formatComments(res.data.comments)
+          : [];
         setData({
           ...res.data,
           comments,
@@ -124,7 +126,7 @@ function PostView() {
               __html: sanitize(marked.parse(data.body)),
             }}
           />
-          <hr />
+          {/* <hr />
           <Heading size="md">Comments</Heading>
           {replyToComment && (
             <HStack>
@@ -146,7 +148,7 @@ function PostView() {
               comments={data.comments}
               onReply={setReplyToComment}
             />
-          )}
+          )} */}
         </Stack>
       )}
     </Container>

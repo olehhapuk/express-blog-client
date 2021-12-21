@@ -45,19 +45,7 @@ function Navbar() {
     <Box as="nav" py={5}>
       <Container maxW="container.xl">
         <HStack justify="space-between">
-          <HStack as="form" maxW="320px" onSubmit={search}>
-            <Input
-              type="search"
-              autoComplete="off"
-              name="search"
-              placeholder="Search..."
-              value={searchQuery}
-              onChange={({ target }) => setSearchQuery(target.value)}
-            />
-            <Button type="submit" colorScheme="blue">
-              Search
-            </Button>
-          </HStack>
+          <Link to={urls.home}>Express Blog</Link>
 
           {isAuthenticated ? (
             <HStack spacing={2}>

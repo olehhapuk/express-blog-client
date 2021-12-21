@@ -55,7 +55,7 @@ function HomeView() {
       method: 'GET',
       url: '/posts',
     })
-      .then((res) => postsDispatch({ type: 'SET', payload: res.data.posts }))
+      .then((res) => postsDispatch({ type: 'SET', payload: res.data }))
       .catch((error) => setError(error))
       .finally(() => setPostsLoading(false));
   }, []);
@@ -80,7 +80,7 @@ function HomeView() {
 
     axios({
       method: 'PATCH',
-      url: `/posts/${postId}/read-later`,
+      url: `/posts/${postId}/save`,
     })
       .then((res) => {
         postsDispatch({ type: 'READ_LATER', payload: res.data });

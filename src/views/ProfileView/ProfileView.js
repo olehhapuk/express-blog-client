@@ -99,10 +99,7 @@ function ProfileView() {
 
     axios({
       method: 'POST',
-      url: `/users/follow`,
-      data: {
-        followId: userId,
-      },
+      url: `/users/${userId}/follow`,
     })
       .then((res) => {
         dispatch(authOperations.fetchUserData());
@@ -179,6 +176,7 @@ function ProfileView() {
               onChange={setTabIndex}
               align="center"
               variant="enclosed"
+              width="100%"
             >
               <TabList>
                 <Tab>My posts</Tab>
