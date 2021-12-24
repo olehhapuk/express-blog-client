@@ -71,7 +71,10 @@ function HomeView() {
         postsDispatch({ type: 'LIKE', payload: res.data });
         dispatch(authOperations.fetchUserData());
       })
-      .catch((error) => console.dir(error))
+      .catch((error) => {
+        setError(error);
+        console.dir(error);
+      })
       .finally(() => setLikeLoadingId(null));
   }
 
@@ -86,7 +89,10 @@ function HomeView() {
         postsDispatch({ type: 'READ_LATER', payload: res.data });
         dispatch(authOperations.fetchUserData());
       })
-      .catch((error) => console.dir(error))
+      .catch((error) => {
+        setError(error);
+        console.dir(error);
+      })
       .finally(() => setReadLaterLoadingId(null));
   }
 

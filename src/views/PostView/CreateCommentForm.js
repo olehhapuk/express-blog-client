@@ -12,7 +12,7 @@ const validationSchema = Yup.object().shape({
   text: Yup.string().min(2).required(),
 });
 
-function CreateCommentForm({ onSubmit }) {
+function CreateCommentForm({ onSubmit, inputRef }) {
   const formik = useFormik({
     validationSchema,
     initialValues: {
@@ -30,6 +30,7 @@ function CreateCommentForm({ onSubmit }) {
           isRequired
         >
           <Textarea
+            ref={inputRef}
             autoComplete="off"
             placeholder="New comment..."
             name="text"

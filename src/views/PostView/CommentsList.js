@@ -2,7 +2,7 @@ import { Stack } from '@chakra-ui/react';
 
 import CommentItem from './CommentItem';
 
-function CommentsList({ comments, onReply, onDelete }) {
+function CommentsList({ comments, onReply, onDelete, onError }) {
   return (
     <Stack spacing={3}>
       {comments.map((comment) => (
@@ -11,6 +11,7 @@ function CommentsList({ comments, onReply, onDelete }) {
           comment={comment}
           onReply={onReply}
           onDelete={onDelete}
+          onError={onError}
         />
       ))}
     </Stack>

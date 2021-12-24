@@ -14,7 +14,7 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import { authSelectors, authOperations } from '../../redux/auth/';
 
-function CommentItem({ comment, onReply, onLiked, onDelete }) {
+function CommentItem({ comment, onReply, onLiked, onDelete, onError }) {
   const [loading, setLoading] = useState(false);
 
   const dispatch = useDispatch();
@@ -38,7 +38,10 @@ function CommentItem({ comment, onReply, onLiked, onDelete }) {
         dispatch(authOperations.fetchUserData());
         onLiked();
       })
-      .catch((error) => console.log(error))
+      .catch((error) => {
+        console.dir(error);
+        onError(error);
+      })
       .finally(() => setLoading(false));
   }
 
