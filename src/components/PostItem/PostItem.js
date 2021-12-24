@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { BsHeartFill, BsHeart } from 'react-icons/bs';
+import { BsHeartFill, BsHeart, BsTrash } from 'react-icons/bs';
 import {
   Stack,
   Heading,
@@ -56,8 +56,10 @@ function PostItem({
   thumbnailUrl,
   likeLoadingId,
   readLaterLoadingId,
+  deleteLoadingId,
   onLike,
   onReadLater,
+  onDelete,
 }) {
   const user = useSelector(authSelectors.getUser);
   const isAuthenticated = useSelector(authSelectors.isAuthenticated);
@@ -65,6 +67,7 @@ function PostItem({
   const isLiked = user && user.likedPosts.find((post) => post._id === _id);
   const isInReadingList =
     user && user.readingList.find((post) => post._id === _id);
+  const isAuthor = user && user._id === author._id;
 
   const startIndex = useMemo(
     () => Math.floor(Math.random() * (colors.length - 3)),
@@ -81,9 +84,20 @@ function PostItem({
     >
       {thumbnailUrl && <Image src={thumbnailUrl} alt={title} width="100%" />}
       <Stack spacing={2} padding={3}>
-        <LinkOverlay as={Link} to={`${urls.post}/${_id}`}>
-          <Heading size="lg">{title}</Heading>
-        </LinkOverlay>
+        <HStack justify="space-between">
+          <LinkOverlay as={Link} to={`${urls.post}/${_id}`}>
+            <Heading size="lg">{title}</Heading>
+          </LinkOverlay>
+          {isAuthor && onDelete && (
+            <IconButton
+              onClick={() => onDelete(_id)}
+              colorScheme="red"
+              isLoading={deleteLoadingId === _id}
+            >
+              <Icon as={BsTrash} />
+            </IconButton>
+          )}
+        </HStack>
         {author ? (
           <ChakraLink
             as={Link}

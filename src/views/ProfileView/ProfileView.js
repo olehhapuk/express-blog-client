@@ -36,6 +36,7 @@ function ProfileView() {
   const [tabIndex, setTabIndex] = useState(0);
   const [likeLoadingId, setLikeLoadingId] = useState(null);
   const [readLaterLoadingId, setReadLaterLoadingId] = useState(null);
+  const [deletePostLoadingId, setDeletePostLoadingId] = useState(null);
   const [userData, setUserData] = useState(null);
   const [userDataLoading, setUserDataLoading] = useState(false);
   const [userDataError, setUserDataError] = useState(null);
@@ -92,6 +93,21 @@ function ProfileView() {
       })
       .catch((error) => console.dir(error))
       .finally(() => setReadLaterLoadingId(null));
+  }
+
+  function deletePost(postId) {
+    setDeletePostLoadingId(postId);
+
+    axios({
+      method: 'DELETE',
+      url: `/posts/${postId}`,
+    })
+      .then(() => {
+        fetchUserData();
+        dispatch(authOperations.fetchUserData());
+      })
+      .catch((error) => console.dir(error))
+      .finally(() => setDeletePostLoadingId(null));
   }
 
   function follow() {
@@ -189,6 +205,7 @@ function ProfileView() {
                     posts={userData.posts}
                     onLike={like}
                     onReadLater={readLater}
+                    onDelete={deletePost}
                   />
                 </TabPanel>
                 <TabPanel>
