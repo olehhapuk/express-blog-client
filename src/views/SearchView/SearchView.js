@@ -89,7 +89,7 @@ function SearchView() {
       params: {
         search: searchParams.search,
         page: activePage.value,
-        perPage: 1,
+        perPage: 24,
       },
     })
       .then((res) => {
