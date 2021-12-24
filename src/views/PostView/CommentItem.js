@@ -5,15 +5,16 @@ import {
   IconButton,
   Heading,
   Text,
+  Icon,
 } from '@chakra-ui/react';
-import { BsReply, BsHeart, BsHeartFill } from 'react-icons/bs';
+import { BsReply, BsHeart, BsHeartFill, BsTrash } from 'react-icons/bs';
 import axios from 'axios';
 import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { authSelectors, authOperations } from '../../redux/auth/';
 
-function CommentItem({ comment, onReply, onLiked }) {
+function CommentItem({ comment, onReply, onLiked, onDelete }) {
   const [loading, setLoading] = useState(false);
 
   const dispatch = useDispatch();
@@ -24,6 +25,7 @@ function CommentItem({ comment, onReply, onLiked }) {
     comment &&
     user &&
     user.likesComments.find(({ _id }) => _id === comment._id);
+  const isAuthor = comment && user && comment.author._id === user._id;
 
   function like() {
     setLoading(true);
@@ -44,7 +46,17 @@ function CommentItem({ comment, onReply, onLiked }) {
     <Box border="1px" borderRadius="lg" borderColor="gray.300" p={3}>
       {comment && (
         <>
-          <Heading size="sm">{comment.author.fullName}</Heading>
+          <HStack justify="space-between">
+            <Heading size="sm">{comment.author.fullName}</Heading>
+            {isAuthor && onDelete && (
+              <IconButton
+                colorScheme="red"
+                onClick={() => onDelete(comment._id)}
+              >
+                <Icon as={BsTrash} />
+              </IconButton>
+            )}
+          </HStack>
           <Text>{comment.text}</Text>
           <HStack spacing={2}>
             <IconButton
@@ -62,6 +74,7 @@ function CommentItem({ comment, onReply, onLiked }) {
                   key={comment._id}
                   comment={comment}
                   onReply={onReply}
+                  onDelete={onDelete}
                 />
               ))}
             </Stack>

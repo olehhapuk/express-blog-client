@@ -55,6 +55,7 @@ function Navbar() {
     <Box as="nav" py={5}>
       <Container maxW="container.xl">
         <HStack justify="space-between">
+          <Link to={urls.home}>Express Blog</Link>
           <HStack as="form" maxW="320px" onSubmit={search}>
             <Input
               type="search"

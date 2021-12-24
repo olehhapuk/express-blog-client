@@ -8,6 +8,7 @@ function PostsList({
   readLaterLoadingId,
   onLike,
   onReadLater,
+  onDelete,
 }) {
   return (
     <Stack spacing={2}>
@@ -19,6 +20,7 @@ function PostsList({
           readLaterLoadingId={readLaterLoadingId}
           onLike={onLike}
           onReadLater={onReadLater}
+          onDelete={onDelete}
         />
       ))}
     </Stack>

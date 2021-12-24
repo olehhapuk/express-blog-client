@@ -96,6 +96,20 @@ function PostView() {
       .finally(() => setCommentsLoading(false));
   }
 
+  function deleteComment(commentId) {
+    setCommentsLoading(true);
+
+    axios({
+      method: 'DELETE',
+      url: `/comments/${commentId}`,
+    })
+      .then(() => {
+        fetchPost();
+      })
+      .catch((error) => setError(error))
+      .finally(() => setCommentsLoading(false));
+  }
+
   return (
     <Container maxW="container.md">
       {loading && (
@@ -145,6 +159,7 @@ function PostView() {
             <CommentsList
               comments={data.comments}
               onReply={setReplyToComment}
+              onDelete={deleteComment}
             />
           )}
         </Stack>
