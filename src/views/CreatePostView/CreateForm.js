@@ -9,6 +9,9 @@ import {
   Stack,
   Heading,
 } from '@chakra-ui/react';
+import { useState } from 'react';
+
+import TagInput from './TagInput';
 
 const validationSchema = Yup.object().shape({
   thumbnailUrl: Yup.string().url().notRequired(),
@@ -20,15 +23,21 @@ const validationSchema = Yup.object().shape({
 });
 
 function CreateForm({ onSubmit, loading }) {
+  const [selectedTags, setSelectedTags] = useState([]);
+
   const formik = useFormik({
     initialValues: {
       thumbnailUrl: '',
       title: '',
       body: '',
-      tags: '',
     },
     validationSchema,
-    onSubmit,
+    onSubmit: (values) => {
+      onSubmit({
+        ...values,
+        tags: selectedTags.join(', '),
+      });
+    },
     validateOnBlur: true,
   });
 
@@ -92,20 +101,10 @@ function CreateForm({ onSubmit, loading }) {
           )}
         </FormControl>
 
-        <FormControl isInvalid={formik.errors.tags && formik.touched.tags}>
-          <Input
-            type="text"
-            autoComplete="off"
-            placeholder="Tags(tag1, tag2)"
-            name="tags"
-            value={formik.values.tags}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-          />
-          {formik.errors.tags && formik.touched.tags && (
-            <FormHelperText>{formik.errors.tags}</FormHelperText>
-          )}
-        </FormControl>
+        <TagInput
+          selectedTags={selectedTags}
+          setSelectedTags={setSelectedTags}
+        />
 
         <Button type="submit" colorScheme="blue" isLoading={loading}>
           Create
