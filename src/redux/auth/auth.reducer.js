@@ -19,6 +19,7 @@ const userReducer = createReducer(null, {
   [actions.loginSuccess]: (_, { payload }) => payload.user,
   [actions.registerSuccess]: (_, { payload }) => payload.newUser,
   [actions.fetchUserDataSuccess]: (_, { payload }) => payload,
+  [actions.fetchUserDataError]: () => null,
   [actions.logout]: () => null,
 });
 

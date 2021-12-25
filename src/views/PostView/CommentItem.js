@@ -20,6 +20,7 @@ function CommentItem({ comment, onReply, onLiked, onDelete, onError }) {
   const dispatch = useDispatch();
 
   const user = useSelector(authSelectors.getUser);
+  const isAuthenticated = useSelector(authSelectors.isAuthenticated);
 
   const isLiked =
     comment &&
@@ -66,8 +67,13 @@ function CommentItem({ comment, onReply, onLiked, onDelete, onError }) {
               icon={isLiked ? <BsHeartFill /> : <BsHeart />}
               onClick={like}
               isLoading={loading}
+              disabled={!isAuthenticated}
             />
-            <IconButton icon={<BsReply />} onClick={() => onReply(comment)} />
+            <IconButton
+              icon={<BsReply />}
+              onClick={() => onReply(comment)}
+              disabled={!isAuthenticated}
+            />
           </HStack>
 
           {comment.comments && comment.comments.length > 0 && (
