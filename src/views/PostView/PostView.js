@@ -25,6 +25,7 @@ import CommentsList from './CommentsList';
 import CreateCommentForm from './CreateCommentForm';
 import AuthorCard from './AuthorCard';
 import { authOperations } from '../../redux/auth';
+import { TagsList } from '../../components';
 
 function formatComments(comments) {
   const allChildComments = [];
@@ -163,6 +164,7 @@ function PostView() {
           <AuthorCard {...data.author} onFollow={follow} />
 
           <Heading size="xl">{data.title}</Heading>
+          <TagsList tags={data.tags} />
           <Text
             className="markdown-body"
             dangerouslySetInnerHTML={{

@@ -27,7 +27,7 @@ function CreatePostView() {
       data,
     })
       .then((res) => {
-        navigate(`${urls.post}/${res.data.newPost._id}`);
+        navigate(`${urls.post}/${res.data._id}`);
       })
       .catch((error) => {
         console.dir(error);
