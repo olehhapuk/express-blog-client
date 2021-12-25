@@ -25,7 +25,7 @@ function CommentItem({ comment, onReply, onLiked, onDelete, onError }) {
   const isLiked =
     comment &&
     user &&
-    user.likesComments.find(({ _id }) => _id === comment._id);
+    user.likedComments.find(({ _id }) => _id === comment._id);
   const isAuthor = comment && user && comment.author._id === user._id;
 
   function like() {
