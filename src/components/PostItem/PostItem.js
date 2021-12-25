@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { BsHeartFill, BsHeart, BsTrash } from 'react-icons/bs';
+import { BsHeartFill, BsHeart, BsTrash, BsPencil } from 'react-icons/bs';
 import {
   Stack,
   Heading,
@@ -87,15 +87,22 @@ function PostItem({
           <LinkOverlay as={Link} to={`${urls.post}/${_id}`}>
             <Heading size="lg">{title}</Heading>
           </LinkOverlay>
-          {isAuthor && onDelete && (
-            <IconButton
-              onClick={() => onDelete(_id)}
-              colorScheme="red"
-              isLoading={deleteLoadingId === _id}
-            >
-              <Icon as={BsTrash} />
-            </IconButton>
-          )}
+          <HStack>
+            {isAuthor && (
+              <IconButton as={Link} to={`${urls.editPost}/${_id}`}>
+                <Icon as={BsPencil} />
+              </IconButton>
+            )}
+            {isAuthor && onDelete && (
+              <IconButton
+                onClick={() => onDelete(_id)}
+                colorScheme="red"
+                isLoading={deleteLoadingId === _id}
+              >
+                <Icon as={BsTrash} />
+              </IconButton>
+            )}
+          </HStack>
         </HStack>
         {author ? (
           <ChakraLink
