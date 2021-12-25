@@ -37,7 +37,9 @@ function CommentItem({ comment, onReply, onLiked, onDelete, onError }) {
     })
       .then(() => {
         dispatch(authOperations.fetchUserData());
-        onLiked();
+        if (onLiked) {
+          onLiked();
+        }
       })
       .catch((error) => {
         console.dir(error);
@@ -61,7 +63,7 @@ function CommentItem({ comment, onReply, onLiked, onDelete, onError }) {
               </IconButton>
             )}
           </HStack>
-          <Text>{comment.text}</Text>
+          <Text mb={3}>{comment.text}</Text>
           <HStack spacing={2}>
             <IconButton
               icon={isLiked ? <BsHeartFill /> : <BsHeart />}
@@ -84,6 +86,8 @@ function CommentItem({ comment, onReply, onLiked, onDelete, onError }) {
                   comment={comment}
                   onReply={onReply}
                   onDelete={onDelete}
+                  onError={onError}
+                  onLiked={onLiked}
                 />
               ))}
             </Stack>

@@ -6,9 +6,6 @@ import {
   Text,
   LinkBox,
   LinkOverlay,
-  Tag,
-  TagLabel,
-  Wrap,
   HStack,
   IconButton,
   Icon,
@@ -18,34 +15,10 @@ import {
   Link as ChakraLink,
 } from '@chakra-ui/react';
 import { useSelector } from 'react-redux';
-import { useMemo } from 'react';
 
 import { urls } from '../../constants/urls';
 import { authSelectors } from '../../redux/auth';
-
-const colors = [
-  'blue',
-  'red',
-  'cyan',
-  'green',
-  'twitter',
-  'facebook',
-  'telegram',
-  'blue',
-  'red',
-  'cyan',
-  'green',
-  'twitter',
-  'facebook',
-  'telegram',
-  'blue',
-  'red',
-  'cyan',
-  'green',
-  'twitter',
-  'facebook',
-  'telegram',
-];
+import { TagsList } from '../';
 
 function PostItem({
   _id,
@@ -68,11 +41,6 @@ function PostItem({
   const isInReadingList =
     user && user.readingList.find((post) => post._id === _id);
   const isAuthor = user && user._id === author._id;
-
-  const startIndex = useMemo(
-    () => Math.floor(Math.random() * (colors.length - 3)),
-    []
-  );
 
   return (
     <LinkBox
@@ -116,17 +84,9 @@ function PostItem({
         ) : (
           <Text color="gray.500">Deleted account</Text>
         )}
-        <Wrap spacing={2}>
-          {tags.map((tag, i) => (
-            <Tag
-              key={tag._id}
-              variant="outline"
-              colorScheme={colors[startIndex + i]}
-            >
-              <TagLabel>{tag.name}</TagLabel>
-            </Tag>
-          ))}
-        </Wrap>
+
+        <TagsList tags={tags} />
+
         <HStack justify="space-between">
           <HStack alignItems="center">
             {isAuthenticated ? (
