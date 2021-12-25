@@ -23,11 +23,12 @@ import {
   Button,
 } from '@chakra-ui/react';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { PostsList } from '../../components';
 import { authOperations, authSelectors } from '../../redux/auth';
+import { urls } from '../../constants/urls';
 
 function ProfileView() {
   const { userId } = useParams();
@@ -44,6 +45,7 @@ function ProfileView() {
   const [followError, setFollowError] = useState(null);
 
   const authUser = useSelector(authSelectors.getUser);
+  const isAuthenticated = useSelector(authSelectors.isAuthenticated);
 
   const isAuthUser = authUser && userId === authUser._id;
   const isFollowing = authUser && authUser.following.includes(userId);
@@ -176,12 +178,19 @@ function ProfileView() {
             </StatGroup>
 
             {isAuthUser ? (
-              <Button colorScheme="blue">Edit Profile</Button>
+              <Button
+                as={Link}
+                to={`${urls.editProfile}/${userId}`}
+                colorScheme="blue"
+              >
+                Edit Profile
+              </Button>
             ) : (
               <Button
                 colorScheme="blue"
                 onClick={follow}
                 isLoading={followLoading}
+                disabled={!isAuthenticated}
               >
                 {isFollowing ? 'Unfollow' : 'Follow'}
               </Button>
