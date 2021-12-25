@@ -5,13 +5,11 @@ import {
   AlertTitle,
   Container,
 } from '@chakra-ui/react';
-import { useDispatch } from 'react-redux';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
 import EditForm from './EditForm';
-import { authOperations } from '../../redux/auth';
 import { urls } from '../../constants/urls';
 
 function EditProfileView() {

@@ -49,6 +49,7 @@ function EditForm({ initialData, onSubmit, loading }) {
       body: initialData.body,
     });
     setSelectedTags(initialData.tags.map((tag) => tag.name));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialData]);
 
   return (
