@@ -2,8 +2,6 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import {
   Input,
-  InputGroup,
-  InputRightElement,
   Button,
   Stack,
   HStack,
@@ -11,12 +9,8 @@ import {
   Textarea,
   FormHelperText,
   FormControl,
-  useBoolean,
 } from '@chakra-ui/react';
-import { useSelector } from 'react-redux';
 import { useEffect } from 'react';
-
-import { authSelectors } from '../../redux/auth';
 
 const validationSchema = Yup.object().shape({
   firstName: Yup.string().min(2).required(),
@@ -57,7 +51,6 @@ function EditForm({ initialData, loading, onSubmit }) {
       birthDate: defaultDate,
     },
     onSubmit: (values) => {
-      console.log(values);
       onSubmit({
         ...values,
         birthDate: inputToDate(values.birthDate).toString(),
@@ -82,6 +75,7 @@ function EditForm({ initialData, loading, onSubmit }) {
       hobby: initialData.hobby,
       birthDate: dateToInput(new Date(initialData.birthDate)),
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialData]);
 
   return (
