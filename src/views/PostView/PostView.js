@@ -19,12 +19,12 @@ import { marked } from 'marked';
 import { useState, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import { BsX } from 'react-icons/bs';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 import CommentsList from './CommentsList';
 import CreateCommentForm from './CreateCommentForm';
 import AuthorCard from './AuthorCard';
-import { authSelectors, authOperations } from '../../redux/auth';
+import { authOperations } from '../../redux/auth';
 
 function formatComments(comments) {
   const allChildComments = [];
@@ -59,8 +59,6 @@ function PostView() {
   const [commentsLoading, setCommentsLoading] = useState(false);
 
   const { postId } = useParams();
-
-  const user = useSelector(authSelectors.getUser);
 
   const dispatch = useDispatch();
 
@@ -164,12 +162,7 @@ function PostView() {
             <Image src={data.thumbnailUrl} alt={data.title} />
           )}
 
-          <AuthorCard
-            {...data.author}
-            isAuthor={user._id === data.author._id}
-            isFollowing={user.following.includes(data.author._id)}
-            onFollow={follow}
-          />
+          <AuthorCard {...data.author} onFollow={follow} />
 
           <Heading size="xl">{data.title}</Heading>
           <Text

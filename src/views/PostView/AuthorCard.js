@@ -8,8 +8,10 @@ import {
   Text,
 } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 import { urls } from '../../constants/urls';
+import { authSelectors } from '../../redux/auth';
 
 function AuthorCard({
   _id,
@@ -18,10 +20,14 @@ function AuthorCard({
   posts,
   fullName,
   avatarUrl,
-  isAuthor,
-  isFollowing,
   onFollow,
 }) {
+  const user = useSelector(authSelectors.getUser);
+  const isAuthenticated = useSelector(authSelectors.isAuthenticated);
+
+  const isAuthor = user && user._id === _id;
+  const isFollowing = user && user.following.includes(_id);
+
   return (
     <Box border="1px" borderRadius="lg" borderColor="gray.300" p={3}>
       <HStack justify="space-between">
@@ -44,7 +50,7 @@ function AuthorCard({
           </Stack>
         </HStack>
 
-        {!isAuthor && (
+        {isAuthenticated && !isAuthor && (
           <Button
             colorScheme={isFollowing ? 'gray' : 'blue'}
             onClick={onFollow}

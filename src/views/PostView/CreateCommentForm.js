@@ -7,6 +7,9 @@ import {
   FormControl,
   FormHelperText,
 } from '@chakra-ui/react';
+import { useSelector } from 'react-redux';
+
+import { authSelectors } from '../../redux/auth';
 
 const validationSchema = Yup.object().shape({
   text: Yup.string().min(2).required(),
@@ -21,6 +24,8 @@ function CreateCommentForm({ onSubmit, inputRef }) {
     validateOnBlur: false,
     onSubmit: ({ text }) => onSubmit(text),
   });
+
+  const isAuthenticated = useSelector(authSelectors.isAuthenticated);
 
   return (
     <form onSubmit={formik.handleSubmit}>
@@ -38,13 +43,14 @@ function CreateCommentForm({ onSubmit, inputRef }) {
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             required
+            disabled={!isAuthenticated}
           />
           {formik.errors.text && formik.touched.text && (
             <FormHelperText>{formik.errors.text}</FormHelperText>
           )}
         </FormControl>
 
-        <Button type="submit" colorScheme="blue">
+        <Button type="submit" colorScheme="blue" disabled={!isAuthenticated}>
           Create
         </Button>
       </Stack>
