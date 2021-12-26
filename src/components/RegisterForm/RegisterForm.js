@@ -51,18 +51,18 @@ function RegisterForm({ onSubmit }) {
   const formik = useFormik({
     validationSchema,
     initialValues: {
-      username: 'john_doe',
-      password: '123456',
-      repeatPassword: '123456',
-      firstName: 'John',
-      lastName: 'Doe',
-      location: 'England',
+      username: '',
+      password: '',
+      repeatPassword: '',
+      firstName: '',
+      lastName: '',
+      location: '',
       avatarUrl:
         'https://www.seekpng.com/png/detail/110-1100707_person-avatar-placeholder.png',
-      githubUrl: 'https://github.com/john_doe',
-      description: "I'm John Doe",
-      work: 'Engineer',
-      hobby: 'Writing',
+      githubUrl: '',
+      description: '',
+      work: '',
+      hobby: '',
       birthDate: defaultDate,
     },
     onSubmit: (values) => {
