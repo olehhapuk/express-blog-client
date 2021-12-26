@@ -39,10 +39,12 @@ const loadingReducer = createReducer(false, {
 });
 
 const errorReducer = createReducer(null, {
-  // [actions.fetchUserDataError]: (_, { payload }) => payload,
   [actions.fetchUserDataRequest]: () => null,
-  [actions.loginError]: (_, { payload }) => payload,
+  // [actions.fetchUserDataError]: (_, { payload }) => payload,
   [actions.loginRequest]: () => null,
+  [actions.loginError]: (_, { payload }) => payload,
+  [actions.registerRequest]: () => null,
+  [actions.registerError]: (_, { payload }) => payload,
 });
 
 export default persistCombineReducers(
