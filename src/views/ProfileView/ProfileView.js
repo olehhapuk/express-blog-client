@@ -201,6 +201,7 @@ function ProfileView() {
               onChange={setTabIndex}
               align="center"
               variant="enclosed"
+              width="100%"
             >
               <TabList>
                 <Tab>My posts</Tab>
