@@ -13,8 +13,6 @@ program.parse(process.argv);
 
 const options = program.opts();
 
-console.log(options);
-
 const componentsPath = (type, innerPath) =>
   path.join(__dirname, `src/${type}s`, innerPath);
 
@@ -49,7 +47,7 @@ export default ${name};
     );
   }
 }
-console.log(options);
+
 createComponent(options)
   .then(() => {
     process.exit(0);
