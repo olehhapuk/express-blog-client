@@ -2,6 +2,8 @@ const fs = require('fs').promises;
 const path = require('path');
 const { Command } = require('commander');
 
+console.log('test');
+
 const program = new Command();
 
 program
