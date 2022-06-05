@@ -9,15 +9,15 @@ import axios from 'axios';
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
-import { urls } from '../../constants/urls';
 import EditForm from './EditForm';
+import { urls } from '../../constants/urls';
 
-function EditPostView() {
+function EditProfileView() {
   const [initialData, setInitialData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const { postId } = useParams();
+  const { userId } = useParams();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -25,23 +25,23 @@ function EditPostView() {
 
     axios({
       method: 'GET',
-      url: `/posts/${postId}`,
+      url: `/users/${userId}`,
     })
       .then((res) => setInitialData(res.data))
       .catch((err) => setError(err))
       .finally(() => setLoading(false));
-  }, [postId]);
+  }, [userId]);
 
-  function editPost(data) {
+  function editProfile(data) {
     setLoading(true);
 
     axios({
       method: 'PUT',
-      url: `/posts/${postId}`,
+      url: `/users/${userId}`,
       data,
     })
       .then(() => {
-        navigate(`${urls.post}/${postId}`);
+        navigate(`${urls.profile}/${userId}`);
       })
       .catch((err) => {
         setError(err);
@@ -50,7 +50,7 @@ function EditPostView() {
   }
 
   return (
-    <Container maxW="container.lg">
+    <Container>
       {error && !loading && (
         <Alert status="error" borderRadius="lg">
           <AlertIcon />
@@ -60,7 +60,7 @@ function EditPostView() {
       )}
 
       <EditForm
-        onSubmit={editPost}
+        onSubmit={editProfile}
         initialData={initialData}
         loading={loading}
       />
@@ -68,4 +68,4 @@ function EditPostView() {
   );
 }
 
-export default EditPostView;
+export default EditProfileView;

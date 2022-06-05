@@ -16,12 +16,16 @@ import {
 import axios from 'axios';
 import { sanitize } from 'dompurify';
 import { marked } from 'marked';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import { BsX } from 'react-icons/bs';
+import { useDispatch } from 'react-redux';
 
 import CommentsList from './CommentsList';
 import CreateCommentForm from './CreateCommentForm';
+import AuthorCard from './AuthorCard';
+import { authOperations } from '../../redux/auth';
+import { TagsList } from '../../components';
 
 function formatComments(comments) {
   const allChildComments = [];
@@ -57,7 +61,17 @@ function PostView() {
 
   const { postId } = useParams();
 
+  const dispatch = useDispatch();
+
+  const inputRef = useRef();
+
   useEffect(fetchPost, [postId]);
+
+  useEffect(() => {
+    if (replyToComment && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [replyToComment]);
 
   function fetchPost() {
     setLoading(true);
@@ -73,7 +87,7 @@ function PostView() {
           comments,
         });
       })
-      .catch((error) => setError(error.message))
+      .catch((error) => setError(error))
       .finally(() => setLoading(false));
   }
 
@@ -89,11 +103,40 @@ function PostView() {
         parentComment: replyToComment?._id,
       },
     })
-      .then((res) => {
+      .then(() => {
         fetchPost();
       })
       .catch((error) => setError(error))
       .finally(() => setCommentsLoading(false));
+  }
+
+  function deleteComment(commentId) {
+    setCommentsLoading(true);
+
+    axios({
+      method: 'DELETE',
+      url: `/comments/${commentId}`,
+    })
+      .then(() => {
+        fetchPost();
+      })
+      .catch((error) => setError(error))
+      .finally(() => setCommentsLoading(false));
+  }
+
+  function follow() {
+    setLoading(true);
+
+    axios({
+      method: 'POST',
+      url: `/users/${data.author._id}/follow`,
+    })
+      .then(() => {
+        dispatch(authOperations.fetchUserData());
+        fetchPost();
+      })
+      .catch((err) => setError(err))
+      .finally(() => setLoading(false));
   }
 
   return (
@@ -117,7 +160,11 @@ function PostView() {
           {data.thumbnailUrl && (
             <Image src={data.thumbnailUrl} alt={data.title} />
           )}
+
+          <AuthorCard {...data.author} onFollow={follow} />
+
           <Heading size="xl">{data.title}</Heading>
+          <TagsList tags={data.tags} />
           <Text
             className="markdown-body"
             dangerouslySetInnerHTML={{
@@ -135,7 +182,9 @@ function PostView() {
               />
             </HStack>
           )}
-          <CreateCommentForm onSubmit={createComment} />
+
+          <CreateCommentForm onSubmit={createComment} inputRef={inputRef} />
+
           {commentsLoading && (
             <Flex justify="center">
               <CircularProgress isIndeterminate />
@@ -145,6 +194,8 @@ function PostView() {
             <CommentsList
               comments={data.comments}
               onReply={setReplyToComment}
+              onDelete={deleteComment}
+              onError={setError}
             />
           )}
         </Stack>

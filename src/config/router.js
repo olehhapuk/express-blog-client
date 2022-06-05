@@ -7,6 +7,7 @@ const HomeView = lazy(() => import('../views/HomeView'));
 const LoginView = lazy(() => import('../views/LoginView'));
 const RegisterView = lazy(() => import('../views/RegisterView'));
 const ProfileView = lazy(() => import('../views/ProfileView'));
+const EditProfileView = lazy(() => import('../views/EditProfileView'));
 const CreatePostView = lazy(() => import('../views/CreatePostView'));
 const EditPostView = lazy(() => import('../views/EditPostView'));
 const PostView = lazy(() => import('../views/PostView'));
@@ -44,6 +45,16 @@ export const routes = [
     path: `${urls.profile}/:userId`,
     exact: true,
     element: <ProfileView />,
+  },
+  {
+    key: 'editProfile',
+    path: `${urls.editProfile}/:userId`,
+    exact: true,
+    element: (
+      <AuthGate.AuthRequired>
+        <EditProfileView />
+      </AuthGate.AuthRequired>
+    ),
   },
   {
     key: 'createPost',

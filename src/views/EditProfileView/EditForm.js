@@ -2,8 +2,6 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import {
   Input,
-  InputGroup,
-  InputRightElement,
   Button,
   Stack,
   HStack,
@@ -11,19 +9,10 @@ import {
   Textarea,
   FormHelperText,
   FormControl,
-  useBoolean,
 } from '@chakra-ui/react';
-import { useSelector } from 'react-redux';
-
-import { authSelectors } from '../../redux/auth';
+import { useEffect } from 'react';
 
 const validationSchema = Yup.object().shape({
-  username: Yup.string().min(2).required(),
-  password: Yup.string().min(6).required(),
-  repeatPassword: Yup.string()
-    .min(6)
-    .oneOf([Yup.ref('password'), null], "Passwords does'nt match")
-    .required(),
   firstName: Yup.string().min(2).required(),
   lastName: Yup.string().min(2).required(),
   location: Yup.string().optional(),
@@ -47,18 +36,14 @@ function inputToDate(inputDate) {
 
 const defaultDate = dateToInput(new Date());
 
-function RegisterForm({ onSubmit }) {
+function EditForm({ initialData, loading, onSubmit }) {
   const formik = useFormik({
     validationSchema,
     initialValues: {
-      username: '',
-      password: '',
-      repeatPassword: '',
       firstName: '',
       lastName: '',
       location: '',
-      avatarUrl:
-        'https://www.seekpng.com/png/detail/110-1100707_person-avatar-placeholder.png',
+      avatarUrl: '',
       githubUrl: '',
       description: '',
       work: '',
@@ -74,101 +59,32 @@ function RegisterForm({ onSubmit }) {
     validateOnBlur: true,
   });
 
-  const [showPassword, setShowPassword] = useBoolean();
-  const [showRepeatPassword, setShowRepeatPassword] = useBoolean();
+  useEffect(() => {
+    if (!initialData) {
+      return;
+    }
 
-  const loading = useSelector(authSelectors.getLoading);
+    formik.setValues({
+      firstName: initialData.firstName,
+      lastName: initialData.lastName,
+      location: initialData.location,
+      avatarUrl: initialData.avatarUrl,
+      githubUrl: initialData.githubUrl,
+      description: initialData.description,
+      work: initialData.work,
+      hobby: initialData.hobby,
+      birthDate: dateToInput(new Date(initialData.birthDate)),
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialData]);
 
   return (
     <form onSubmit={formik.handleSubmit}>
       <Heading mb={5} textAlign="center">
-        Register
+        Edit Profile
       </Heading>
 
       <Stack spacing={3}>
-        <FormControl
-          isInvalid={formik.errors.username && formik.touched.username}
-          isRequired
-        >
-          <Input
-            type="text"
-            autoComplete="username"
-            placeholder="Username"
-            name="username"
-            value={formik.values.username}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            required
-          />
-          {formik.errors.username && formik.touched.username && (
-            <FormHelperText>{formik.errors.username}</FormHelperText>
-          )}
-        </FormControl>
-
-        <HStack align="flex-start">
-          <FormControl
-            isInvalid={formik.errors.password && formik.touched.password}
-            isRequired
-          >
-            <InputGroup>
-              <Input
-                type={showPassword ? 'text' : 'password'}
-                autoComplete="new-password"
-                placeholder="Password"
-                name="password"
-                value={formik.values.password}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                required
-              />
-              <InputRightElement width="4.5rem">
-                <Button
-                  onClick={setShowPassword.toggle}
-                  size="sm"
-                  height="1.75rem"
-                >
-                  {showPassword ? 'Hide' : 'Show'}
-                </Button>
-              </InputRightElement>
-            </InputGroup>
-            {formik.errors.password && formik.touched.password && (
-              <FormHelperText>{formik.errors.password}</FormHelperText>
-            )}
-          </FormControl>
-
-          <FormControl
-            isInvalid={
-              formik.errors.repeatPassword && formik.touched.repeatPassword
-            }
-            isRequired
-          >
-            <InputGroup>
-              <Input
-                type={showRepeatPassword ? 'text' : 'password'}
-                autoComplete="new-password"
-                placeholder="Repeat password"
-                name="repeatPassword"
-                value={formik.values.repeatPassword}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                required
-              />
-              <InputRightElement width="4.5rem">
-                <Button
-                  onClick={setShowRepeatPassword.toggle}
-                  size="sm"
-                  height="1.75rem"
-                >
-                  {showPassword ? 'Hide' : 'Show'}
-                </Button>
-              </InputRightElement>
-            </InputGroup>
-            {formik.errors.repeatPassword && formik.touched.repeatPassword && (
-              <FormHelperText>{formik.errors.repeatPassword}</FormHelperText>
-            )}
-          </FormControl>
-        </HStack>
-
         <HStack align="flex-start">
           <FormControl
             isInvalid={formik.errors.firstName && formik.touched.firstName}
@@ -322,11 +238,11 @@ function RegisterForm({ onSubmit }) {
         </FormControl>
 
         <Button type="submit" colorScheme="blue" isLoading={loading}>
-          Register
+          Save
         </Button>
       </Stack>
     </form>
   );
 }
 
-export default RegisterForm;
+export default EditForm;

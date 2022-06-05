@@ -1,8 +1,14 @@
-import { Container } from '@chakra-ui/react';
-import { useDispatch } from 'react-redux';
+import {
+  Alert,
+  AlertDescription,
+  AlertIcon,
+  AlertTitle,
+  Container,
+} from '@chakra-ui/react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { LoginForm } from '../../components';
-import { authOperations } from '../../redux/auth';
+import { authOperations, authSelectors } from '../../redux/auth';
 
 function LoginView() {
   const dispatch = useDispatch();
@@ -11,8 +17,18 @@ function LoginView() {
     dispatch(authOperations.login(data));
   }
 
+  const authError = useSelector(authSelectors.getError);
+
   return (
     <Container>
+      {authError && (
+        <Alert status="error" borderRadius="lg">
+          <AlertIcon />
+          <AlertTitle>Error</AlertTitle>
+          <AlertDescription>{authError}</AlertDescription>
+        </Alert>
+      )}
+
       <LoginForm onSubmit={login} />
     </Container>
   );

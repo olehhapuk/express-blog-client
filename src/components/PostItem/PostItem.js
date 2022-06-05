@@ -1,26 +1,23 @@
 import { Link } from 'react-router-dom';
-import { BsHeartFill, BsHeart } from 'react-icons/bs';
+import { BsHeartFill, BsHeart, BsTrash, BsPencil } from 'react-icons/bs';
 import {
   Stack,
   Heading,
   Text,
   LinkBox,
   LinkOverlay,
-  Tag,
-  TagLabel,
-  Wrap,
   HStack,
   IconButton,
   Icon,
   Button,
   Image,
-  Box,
   Link as ChakraLink,
 } from '@chakra-ui/react';
 import { useSelector } from 'react-redux';
 
 import { urls } from '../../constants/urls';
 import { authSelectors } from '../../redux/auth';
+import { TagsList } from '../';
 
 function PostItem({
   _id,
@@ -31,8 +28,10 @@ function PostItem({
   thumbnailUrl,
   likeLoadingId,
   readLaterLoadingId,
+  deleteLoadingId,
   onLike,
   onReadLater,
+  onDelete,
 }) {
   const user = useSelector(authSelectors.getUser);
   const isAuthenticated = useSelector(authSelectors.isAuthenticated);
@@ -40,6 +39,7 @@ function PostItem({
   const isLiked = user && user.likedPosts.find((post) => post._id === _id);
   const isInReadingList =
     user && user.readingList.find((post) => post._id === _id);
+  const isAuthor = user && user._id === author._id;
 
   return (
     <LinkBox
@@ -51,9 +51,27 @@ function PostItem({
     >
       {thumbnailUrl && <Image src={thumbnailUrl} alt={title} width="100%" />}
       <Stack spacing={2} padding={3}>
-        <LinkOverlay as={Link} to={`${urls.post}/${_id}`}>
-          <Heading size="lg">{title}</Heading>
-        </LinkOverlay>
+        <HStack justify="space-between">
+          <LinkOverlay as={Link} to={`${urls.post}/${_id}`}>
+            <Heading size="lg">{title}</Heading>
+          </LinkOverlay>
+          <HStack>
+            {isAuthor && (
+              <IconButton as={Link} to={`${urls.editPost}/${_id}`}>
+                <Icon as={BsPencil} />
+              </IconButton>
+            )}
+            {isAuthor && onDelete && (
+              <IconButton
+                onClick={() => onDelete(_id)}
+                colorScheme="red"
+                isLoading={deleteLoadingId === _id}
+              >
+                <Icon as={BsTrash} />
+              </IconButton>
+            )}
+          </HStack>
+        </HStack>
         {author ? (
           <ChakraLink
             as={Link}
@@ -65,13 +83,9 @@ function PostItem({
         ) : (
           <Text color="gray.500">Deleted account</Text>
         )}
-        <Wrap spacing={2}>
-          {tags.map((tag) => (
-            <Tag key={tag._id} variant="outline">
-              <TagLabel>{tag.name}</TagLabel>
-            </Tag>
-          ))}
-        </Wrap>
+
+        <TagsList tags={tags} />
+
         <HStack justify="space-between">
           <HStack alignItems="center">
             {isAuthenticated ? (

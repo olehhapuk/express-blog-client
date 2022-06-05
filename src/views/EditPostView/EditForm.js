@@ -9,9 +9,9 @@ import {
   Stack,
   Heading,
 } from '@chakra-ui/react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
-import TagInput from './TagInput';
+import TagInput from '../CreatePostView/TagInput';
 
 const validationSchema = Yup.object().shape({
   thumbnailUrl: Yup.string().url().notRequired(),
@@ -19,7 +19,7 @@ const validationSchema = Yup.object().shape({
   body: Yup.string().min(10).required(),
 });
 
-function CreateForm({ onSubmit, loading }) {
+function EditForm({ initialData, onSubmit, loading }) {
   const [selectedTags, setSelectedTags] = useState([]);
 
   const formik = useFormik({
@@ -37,6 +37,20 @@ function CreateForm({ onSubmit, loading }) {
     },
     validateOnBlur: true,
   });
+
+  useEffect(() => {
+    if (!initialData) {
+      return;
+    }
+
+    formik.setValues({
+      thumbnailUrl: initialData.thumbnailUrl,
+      title: initialData.title,
+      body: initialData.body,
+    });
+    setSelectedTags(initialData.tags.map((tag) => tag.name));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialData]);
 
   return (
     <form onSubmit={formik.handleSubmit}>
@@ -104,11 +118,11 @@ function CreateForm({ onSubmit, loading }) {
         />
 
         <Button type="submit" colorScheme="blue" isLoading={loading}>
-          Create
+          Edit
         </Button>
       </Stack>
     </form>
   );
 }
 
-export default CreateForm;
+export default EditForm;

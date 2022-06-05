@@ -7,6 +7,7 @@ import { PersistGate } from 'redux-persist/integration/react';
 
 import './index.css';
 import 'github-markdown-css';
+import '@reach/combobox/styles.css';
 import './config/axios';
 import { App } from './components';
 import { persistor, store } from './redux/store';

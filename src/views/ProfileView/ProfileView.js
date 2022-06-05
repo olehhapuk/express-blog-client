@@ -23,11 +23,12 @@ import {
   Button,
 } from '@chakra-ui/react';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { PostsList } from '../../components';
 import { authOperations, authSelectors } from '../../redux/auth';
+import { urls } from '../../constants/urls';
 
 function ProfileView() {
   const { userId } = useParams();
@@ -36,6 +37,7 @@ function ProfileView() {
   const [tabIndex, setTabIndex] = useState(0);
   const [likeLoadingId, setLikeLoadingId] = useState(null);
   const [readLaterLoadingId, setReadLaterLoadingId] = useState(null);
+  const [deletePostLoadingId, setDeletePostLoadingId] = useState(null);
   const [userData, setUserData] = useState(null);
   const [userDataLoading, setUserDataLoading] = useState(false);
   const [userDataError, setUserDataError] = useState(null);
@@ -43,6 +45,7 @@ function ProfileView() {
   const [followError, setFollowError] = useState(null);
 
   const authUser = useSelector(authSelectors.getUser);
+  const isAuthenticated = useSelector(authSelectors.isAuthenticated);
 
   const isAuthUser = authUser && userId === authUser._id;
   const isFollowing = authUser && authUser.following.includes(userId);
@@ -84,7 +87,7 @@ function ProfileView() {
 
     axios({
       method: 'PATCH',
-      url: `/posts/${postId}/read-later`,
+      url: `/posts/${postId}/save`,
     })
       .then(() => {
         fetchUserData();
@@ -94,15 +97,27 @@ function ProfileView() {
       .finally(() => setReadLaterLoadingId(null));
   }
 
+  function deletePost(postId) {
+    setDeletePostLoadingId(postId);
+
+    axios({
+      method: 'DELETE',
+      url: `/posts/${postId}`,
+    })
+      .then(() => {
+        fetchUserData();
+        dispatch(authOperations.fetchUserData());
+      })
+      .catch((error) => console.dir(error))
+      .finally(() => setDeletePostLoadingId(null));
+  }
+
   function follow() {
     setFollowLoading(true);
 
     axios({
       method: 'POST',
-      url: `/users/follow`,
-      data: {
-        followId: userId,
-      },
+      url: `/users/${userId}/follow`,
     })
       .then((res) => {
         dispatch(authOperations.fetchUserData());
@@ -163,12 +178,19 @@ function ProfileView() {
             </StatGroup>
 
             {isAuthUser ? (
-              <Button colorScheme="blue">Edit Profile</Button>
+              <Button
+                as={Link}
+                to={`${urls.editProfile}/${userId}`}
+                colorScheme="blue"
+              >
+                Edit Profile
+              </Button>
             ) : (
               <Button
                 colorScheme="blue"
                 onClick={follow}
                 isLoading={followLoading}
+                disabled={!isAuthenticated}
               >
                 {isFollowing ? 'Unfollow' : 'Follow'}
               </Button>
@@ -179,6 +201,7 @@ function ProfileView() {
               onChange={setTabIndex}
               align="center"
               variant="enclosed"
+              width="100%"
             >
               <TabList>
                 <Tab>My posts</Tab>
@@ -191,6 +214,7 @@ function ProfileView() {
                     posts={userData.posts}
                     onLike={like}
                     onReadLater={readLater}
+                    onDelete={deletePost}
                   />
                 </TabPanel>
                 <TabPanel>
