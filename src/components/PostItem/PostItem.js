@@ -24,7 +24,6 @@ function PostItem({
   title,
   author,
   tags,
-  usersLiked,
   thumbnailUrl,
   likeLoadingId,
   readLaterLoadingId,
@@ -99,7 +98,6 @@ function PostItem({
             ) : (
               <Icon as={BsHeart} m={2} />
             )}
-            <Text>{usersLiked}</Text>
           </HStack>
           {isAuthenticated && (
             <Button

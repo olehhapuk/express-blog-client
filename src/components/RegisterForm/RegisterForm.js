@@ -14,6 +14,7 @@ import {
   useBoolean,
 } from '@chakra-ui/react';
 import { useSelector } from 'react-redux';
+import { useState } from 'react';
 
 import { authSelectors } from '../../redux/auth';
 
@@ -48,17 +49,18 @@ function inputToDate(inputDate) {
 const defaultDate = dateToInput(new Date());
 
 function RegisterForm({ onSubmit }) {
+  const [avatar, setAvatar] = useState(null);
+
   const formik = useFormik({
     validationSchema,
     initialValues: {
       username: '',
+      email: '',
       password: '',
       repeatPassword: '',
       firstName: '',
       lastName: '',
       location: '',
-      avatarUrl:
-        'https://www.seekpng.com/png/detail/110-1100707_person-avatar-placeholder.png',
       githubUrl: '',
       description: '',
       work: '',
@@ -66,10 +68,16 @@ function RegisterForm({ onSubmit }) {
       birthDate: defaultDate,
     },
     onSubmit: (values) => {
-      onSubmit({
-        ...values,
-        birthDate: inputToDate(values.birthDate).toString(),
-      });
+      const formData = new FormData();
+
+      for (const key of Object.keys(values)) {
+        formData.append(key, values[key]);
+      }
+
+      formData.set('birthDate', inputToDate(values.birthDate).toString());
+      formData.append('avatar', avatar);
+
+      onSubmit(formData);
     },
     validateOnBlur: true,
   });
@@ -96,6 +104,25 @@ function RegisterForm({ onSubmit }) {
             placeholder="Username"
             name="username"
             value={formik.values.username}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            required
+          />
+          {formik.errors.username && formik.touched.username && (
+            <FormHelperText>{formik.errors.username}</FormHelperText>
+          )}
+        </FormControl>
+
+        <FormControl
+          isInvalid={formik.errors.email && formik.touched.email}
+          isRequired
+        >
+          <Input
+            type="email"
+            autoComplete="email"
+            placeholder="Email"
+            name="email"
+            value={formik.values.email}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             required
@@ -230,17 +257,12 @@ function RegisterForm({ onSubmit }) {
           isInvalid={formik.errors.avatarUrl && formik.touched.avatarUrl}
         >
           <Input
-            type="url"
-            autoComplete="photo"
-            placeholder="Avatar URL"
-            name="avatarUrl"
-            value={formik.values.avatarUrl}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
+            type="file"
+            placeholder="Avatar"
+            name="avatar"
+            onChange={(e) => setAvatar(e.target.files[0])}
+            required
           />
-          {formik.errors.avatarUrl && formik.touched.avatarUrl && (
-            <FormHelperText>{formik.errors.avatarUrl}</FormHelperText>
-          )}
         </FormControl>
 
         <FormControl
