@@ -8,4 +8,5 @@ export const urls = {
   editPost: '/edit-post',
   post: '/post',
   search: '/search',
+  chats: '/chats',
 };

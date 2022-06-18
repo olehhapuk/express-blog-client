@@ -12,6 +12,7 @@ const CreatePostView = lazy(() => import('../views/CreatePostView'));
 const EditPostView = lazy(() => import('../views/EditPostView'));
 const PostView = lazy(() => import('../views/PostView'));
 const SearchView = lazy(() => import('../views/SearchView'));
+const ChatsView = lazy(() => import('../views/ChatsView'));
 
 export const routes = [
   {
@@ -87,5 +88,11 @@ export const routes = [
     path: urls.search,
     exact: true,
     element: <SearchView />,
+  },
+  {
+    key: 'chats',
+    path: urls.chats + '/*',
+    exact: false,
+    element: <ChatsView />,
   },
 ];

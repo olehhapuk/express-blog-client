@@ -21,7 +21,9 @@ import {
   AlertTitle,
   AlertDescription,
   Button,
+  IconButton,
 } from '@chakra-ui/react';
+import { ChatIcon } from '@chakra-ui/icons';
 import axios from 'axios';
 import { Link, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -37,11 +39,13 @@ function ProfileView() {
   const [tabIndex, setTabIndex] = useState(0);
   const [likeLoadingId, setLikeLoadingId] = useState(null);
   const [readLaterLoadingId, setReadLaterLoadingId] = useState(null);
+  // eslint-disable-next-line no-unused-vars
   const [deletePostLoadingId, setDeletePostLoadingId] = useState(null);
   const [userData, setUserData] = useState(null);
   const [userDataLoading, setUserDataLoading] = useState(false);
   const [userDataError, setUserDataError] = useState(null);
   const [followLoading, setFollowLoading] = useState(false);
+  // eslint-disable-next-line no-unused-vars
   const [followError, setFollowError] = useState(null);
 
   const authUser = useSelector(authSelectors.getUser);
@@ -128,6 +132,10 @@ function ProfileView() {
       .finally(() => setFollowLoading(false));
   }
 
+  function createChat() {
+    console.log(`Creating chat with ${userId}`);
+  }
+
   return (
     <Container maxW="container.xl">
       {userDataLoading && (
@@ -186,14 +194,19 @@ function ProfileView() {
                 Edit Profile
               </Button>
             ) : (
-              <Button
-                colorScheme="blue"
-                onClick={follow}
-                isLoading={followLoading}
-                disabled={!isAuthenticated}
-              >
-                {isFollowing ? 'Unfollow' : 'Follow'}
-              </Button>
+              <Stack direction="row">
+                <Button
+                  colorScheme="blue"
+                  onClick={follow}
+                  isLoading={followLoading}
+                  disabled={!isAuthenticated}
+                >
+                  {isFollowing ? 'Unfollow' : 'Follow'}
+                </Button>
+                <IconButton onClick={createChat}>
+                  <ChatIcon />
+                </IconButton>
+              </Stack>
             )}
 
             <Tabs

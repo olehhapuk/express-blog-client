@@ -1,50 +1,20 @@
-import {
-  Box,
-  Input,
-  Button,
-  HStack,
-  Container,
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuItem,
-  IconButton,
-} from '@chakra-ui/react';
-import { HamburgerIcon } from '@chakra-ui/icons';
-import { useState, useEffect } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
+import { Box, Button, HStack, Container, IconButton } from '@chakra-ui/react';
+import { ChatIcon } from '@chakra-ui/icons';
+import { Link, useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import qs from 'query-string';
 
 import { urls } from '../../constants/urls';
-import { authSelectors, authActions } from '../../redux/auth';
+import { authSelectors } from '../../redux/auth';
+import Searchbar from './Searchbar';
+import Dropdown from './Dropdown';
 
 function Navbar() {
-  const [searchQuery, setSearchQuery] = useState('');
-
   const isAuthenticated = useSelector(authSelectors.isAuthenticated);
-  const user = useSelector(authSelectors.getUser);
 
-  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const location = useLocation();
 
-  useEffect(() => {
-    if (location.pathname !== urls.search) {
-      setSearchQuery('');
-    } else {
-      const searchParams = qs.parse(location.search);
-      setSearchQuery(searchParams.search);
-    }
-  }, [location.pathname]);
-
-  function logout() {
-    dispatch(authActions.logout());
-  }
-
-  function search(e) {
-    e.preventDefault();
-
+  function search(searchQuery) {
     const queryString = qs.stringify({
       search: searchQuery,
     });
@@ -56,43 +26,20 @@ function Navbar() {
       <Container maxW="container.xl">
         <HStack justify="space-between">
           <Link to={urls.home}>Express Blog</Link>
-          <HStack as="form" maxW="320px" onSubmit={search}>
-            <Input
-              type="search"
-              autoComplete="off"
-              name="search"
-              placeholder="Search..."
-              value={searchQuery}
-              onChange={({ target }) => setSearchQuery(target.value)}
-              required
-            />
-            <Button type="submit" colorScheme="blue">
-              Search
-            </Button>
-          </HStack>
+
+          <Searchbar onSearch={search} />
 
           {isAuthenticated ? (
             <HStack spacing={2}>
+              <IconButton as={Link} to={urls.chats}>
+                <ChatIcon />
+              </IconButton>
+
               <Button colorScheme="blue" as={Link} to={urls.createPost}>
                 Create Post
               </Button>
 
-              <Box>
-                <Menu closeOnBlur closeOnSelect>
-                  <MenuButton as={IconButton}>
-                    <HamburgerIcon />
-                  </MenuButton>
-                  <MenuList>
-                    <MenuItem as={Link} to={urls.home}>
-                      Home
-                    </MenuItem>
-                    <MenuItem as={Link} to={`${urls.profile}/${user._id}`}>
-                      My Profile
-                    </MenuItem>
-                    <MenuItem onClick={logout}>Logout</MenuItem>
-                  </MenuList>
-                </Menu>
-              </Box>
+              <Dropdown />
             </HStack>
           ) : (
             <HStack>

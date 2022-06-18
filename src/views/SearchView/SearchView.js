@@ -78,6 +78,7 @@ function SearchView() {
 
   useEffect(() => {
     fetchPosts();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activePage]);
 
   function fetchPosts() {
