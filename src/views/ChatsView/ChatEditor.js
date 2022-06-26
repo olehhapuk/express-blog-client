@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 
 const textareaMaxHeight = 100;
 
-function ChatEditor() {
+function ChatEditor({ onCreate }) {
   const [text, setText] = useState('');
 
   const textareaRef = useRef();
@@ -35,7 +35,7 @@ function ChatEditor() {
           value={text}
           onChange={(e) => setText(e.target.value)}
         />
-        <IconButton>
+        <IconButton type="submit" onClick={() => onCreate({ body: text })}>
           <Icon as={AiOutlineSend} />
         </IconButton>
       </Stack>

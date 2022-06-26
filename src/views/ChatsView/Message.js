@@ -1,6 +1,6 @@
 import { Box, Heading, Text } from '@chakra-ui/react';
 
-function Message({ isMine }) {
+function Message({ body, isMine }) {
   return (
     <Box>
       <Box
@@ -15,7 +15,7 @@ function Message({ isMine }) {
           John Doe
         </Heading>
         <Text as="p" fontSize="md">
-          Test message text
+          {body}
         </Text>
       </Box>
     </Box>

@@ -3,12 +3,23 @@ import { Link } from 'react-router-dom';
 
 import { urls } from '../../constants/urls';
 
-function ChatItem({ _id }) {
+function ChatItem({
+  _id,
+  lastMessage,
+  users,
+  theme,
+  messages,
+  authId,
+  createdAt,
+}) {
+  const lastMessageCreatedAt = lastMessage ? lastMessage.createdAt : createdAt;
+  const lastMessageDate = new Date(lastMessageCreatedAt).toLocaleDateString();
+  const currentUser = users.find((user) => user._id !== authId);
   return (
     <Stack as={Link} to={`${urls.chats}/${_id}`} direction="row" padding="12px">
       <Box marginRight="8px" width="64px" height="64px" flexShrink="0">
         <Image
-          src="https://www.mona.uwi.edu/modlang/sites/default/files/modlang/male-avatar-placeholder.png"
+          src={currentUser.avatarUrl}
           alt="Avatar"
           display="block"
           width="100%"
@@ -25,14 +36,14 @@ function ChatItem({ _id }) {
           justifyContent="space-between"
         >
           <Heading as="h4" size="md">
-            John Doe
+            {currentUser.fullName}
           </Heading>
           <Text as="span" fontSize="sm">
-            01.01.2022
+            {lastMessageDate}
           </Text>
         </Stack>
         <Text as="p" fontSize="md">
-          Last message text
+          {lastMessage ? lastMessage.body : 'No messages'}
         </Text>
       </Box>
     </Stack>

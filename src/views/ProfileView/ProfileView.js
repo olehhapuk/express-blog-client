@@ -25,12 +25,13 @@ import {
 } from '@chakra-ui/react';
 import { ChatIcon } from '@chakra-ui/icons';
 import axios from 'axios';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { PostsList } from '../../components';
 import { authOperations, authSelectors } from '../../redux/auth';
 import { urls } from '../../constants/urls';
+import { socket } from '../../config/socket';
 
 function ProfileView() {
   const { userId } = useParams();
@@ -53,6 +54,8 @@ function ProfileView() {
 
   const isAuthUser = authUser && userId === authUser._id;
   const isFollowing = authUser && authUser.following.includes(userId);
+
+  const navigate = useNavigate();
 
   useEffect(fetchUserData, [userId]);
   useEffect(() => {
@@ -132,8 +135,18 @@ function ProfileView() {
       .finally(() => setFollowLoading(false));
   }
 
+  useEffect(() => {
+    socket.on('chat:create', createChat);
+    return () => {
+      socket.off('chat:create', createChat);
+    };
+  }, []);
+
   function createChat() {
-    console.log(`Creating chat with ${userId}`);
+    //console.log(`Creating chat with ${userId}`);
+    socket.emit('chat:create', userId, authUser._id, () => {
+      navigate('/chats');
+    });
   }
 
   return (

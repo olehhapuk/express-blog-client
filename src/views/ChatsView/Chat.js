@@ -1,13 +1,12 @@
 import { Heading, Stack } from '@chakra-ui/react';
 import { useParams } from 'react-router-dom';
 import { useEffect, useState, useRef } from 'react';
+import { useSelector } from 'react-redux';
 
 import Message from './Message';
 import ChatEditor from './ChatEditor';
-
-// const initialMessages = new Array(50)
-//   .fill({})
-//   .map((_, i) => ({ _id: i + 1, isMine: Math.round(Math.random()) === 1 }));
+import { socket } from '../../config/socket';
+import { authSelectors } from '../../redux/auth';
 
 let prevMessages = [];
 
@@ -23,6 +22,8 @@ function Chat() {
       prevMessages = messages;
     };
   }, [messages]);
+
+  const user = useSelector(authSelectors.getUser);
 
   useEffect(() => {
     if (!messagesListRef.current) {
@@ -48,6 +49,40 @@ function Chat() {
     };
   }, []);
 
+  useEffect(() => {
+    socket.on('message:create', onMessageReceived);
+    return () => {
+      socket.off('message:create', onMessageReceived);
+    };
+  }, []);
+
+  function onMessageCreate(message) {
+    console.log(message);
+    socket.emit(message.body, chatId, user._id);
+  }
+
+  useEffect(() => {
+    console.log(chatId);
+    socket.emit('chat:join', chatId);
+    return () => {
+      socket.emit('chat:leave', chatId);
+    };
+  }, [chatId]);
+
+  function onMessageReceived(message) {
+    setMessages((prev) => [...prev, message]);
+  }
+
+  useEffect(() => {
+    getMessages();
+  }, [chatId]);
+
+  function getMessages() {
+    socket.emit('messages:all', chatId, (messages) => {
+      setMessages(messages);
+    });
+  }
+
   return (
     <Stack
       borderWidth="1px"
@@ -68,7 +103,7 @@ function Chat() {
         ))}
       </Stack>
 
-      <ChatEditor />
+      <ChatEditor onCreate={onMessageCreate} />
     </Stack>
   );
 }
