@@ -26,6 +26,10 @@ function Chat() {
   const user = useSelector(authSelectors.getUser);
 
   useEffect(() => {
+    console.log(user);
+  }, [user]);
+
+  useEffect(() => {
     if (!messagesListRef.current) {
       return;
     }
@@ -57,20 +61,39 @@ function Chat() {
   }, []);
 
   function onMessageCreate(message) {
-    console.log(message);
-    socket.emit(message.body, chatId, user._id);
+    console.log(chatId);
+    socket.emit('message:create', message.body, chatId, user._id);
   }
 
   useEffect(() => {
     console.log(chatId);
     socket.emit('chat:join', chatId);
+    socket.on('messages:read', onMessageRead);
     return () => {
       socket.emit('chat:leave', chatId);
+      socket.off('messages:read', onMessageRead);
     };
   }, [chatId]);
 
   function onMessageReceived(message) {
-    setMessages((prev) => [...prev, message]);
+    if (message.sender._id !== user._id) {
+      socket.emit('messages:read', chatId, message._id);
+    }
+    setMessages((prev) => [...prev, { ...message }]);
+    console.log(message);
+  }
+
+  function onMessageRead(message) {
+    console.log(chatId);
+    setMessages((prev) => {
+      return prev.map((msg) => {
+        if (msg._id === message._id) {
+          return message;
+        } else {
+          return msg;
+        }
+      });
+    });
   }
 
   useEffect(() => {
@@ -99,7 +122,13 @@ function Chat() {
         )}
 
         {messages.map((message) => (
-          <Message key={message._id} {...message} />
+          <Message
+            key={message._id}
+            {...message}
+            isMine={message.sender._id === user._id ? true : false}
+            fullName={message.sender.fullName}
+            isRead={message.read}
+          />
         ))}
       </Stack>
 

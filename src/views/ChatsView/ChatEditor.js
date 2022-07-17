@@ -24,6 +24,18 @@ function ChatEditor({ onCreate }) {
     textarea.style.height = Math.min(prevHeight, textareaMaxHeight) + 'px';
   }, [text, textareaRef]);
 
+  function onEditorKeydown(e) {
+    if (e.shiftKey && e.key === 'Enter') {
+      e.preventDefault();
+      setText((prev) => prev + '\n');
+    } else if (e.key === 'Enter') {
+      e.preventDefault();
+      createMessage();
+    }
+  }
+  function createMessage() {
+    onCreate({ body: text });
+  }
   return (
     <Stack>
       <Stack direction="row">
@@ -34,8 +46,9 @@ function ChatEditor({ onCreate }) {
           placeholder="Enter your message"
           value={text}
           onChange={(e) => setText(e.target.value)}
+          onKeyDown={onEditorKeydown}
         />
-        <IconButton type="submit" onClick={() => onCreate({ body: text })}>
+        <IconButton type="submit" onClick={createMessage}>
           <Icon as={AiOutlineSend} />
         </IconButton>
       </Stack>

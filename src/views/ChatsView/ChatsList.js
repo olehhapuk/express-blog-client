@@ -11,8 +11,9 @@ function ChatsList() {
   const authUser = useSelector(authSelectors.getUser);
 
   useEffect(() => {
+    console.log(authUser);
     getChats();
-  }, []);
+  }, [authUser]);
 
   function getChats() {
     socket.emit('chat:all', authUser._id, (chats) => {

@@ -93,6 +93,10 @@ export const routes = [
     key: 'chats',
     path: urls.chats + '/*',
     exact: false,
-    element: <ChatsView />,
+    element: (
+      <AuthGate.AuthRequired>
+        <ChatsView />
+      </AuthGate.AuthRequired>
+    ),
   },
 ];
