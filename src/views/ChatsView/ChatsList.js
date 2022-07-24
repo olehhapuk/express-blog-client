@@ -29,6 +29,7 @@ function ChatsList() {
   }, []);
 
   function onChatUpdated(chat) {
+    console.log('CHAT:', chat);
     setChats((prev) => {
       return prev.map((prevChat) => {
         if (prevChat._id === chat._id) {

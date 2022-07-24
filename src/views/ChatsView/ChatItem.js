@@ -1,5 +1,6 @@
 import { Box, Heading, Image, Stack, Text } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 
 import { urls } from '../../constants/urls';
 
@@ -13,25 +14,26 @@ function ChatItem({
   createdAt,
 }) {
   const lastMessageCreatedAt = lastMessage ? lastMessage.createdAt : createdAt;
-
-  let lastMessageDate;
-  const diffTime = Math.abs(new Date() - new Date(lastMessageCreatedAt));
-  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-  const hours = Math.round(diffTime / 1000 / 60 / 60);
-  const minutes = Math.round(diffTime / 1000 / 60);
-  if (diffDays <= 1) {
-    if (minutes >= 60) {
-      lastMessageDate = hours + 'h';
-    } else {
-      if (minutes === 0) {
-        lastMessageDate = 'now';
+  const [lastMessageDate, setLastMessageDate] = useState('now');
+  useEffect(() => {
+    const diffTime = Math.abs(new Date() - new Date(lastMessageCreatedAt));
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    const hours = Math.round(diffTime / 1000 / 60 / 60);
+    const minutes = Math.round(diffTime / 1000 / 60);
+    if (diffDays <= 1) {
+      if (minutes >= 60) {
+        setLastMessageDate(hours + 'h');
       } else {
-        lastMessageDate = minutes + 'm';
+        if (minutes === 0) {
+          setLastMessageDate('now');
+        } else {
+          setLastMessageDate(minutes + 'm');
+        }
       }
+    } else {
+      setLastMessageDate(new Date(lastMessageCreatedAt).toLocaleDateString());
     }
-  } else {
-    lastMessageDate = new Date(lastMessageCreatedAt).toLocaleDateString();
-  }
+  }, [messages]);
 
   const currentUser = users.find((user) => user._id !== authId);
   return (
