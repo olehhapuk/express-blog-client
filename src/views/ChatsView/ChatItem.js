@@ -13,7 +13,26 @@ function ChatItem({
   createdAt,
 }) {
   const lastMessageCreatedAt = lastMessage ? lastMessage.createdAt : createdAt;
-  const lastMessageDate = new Date(lastMessageCreatedAt).toLocaleDateString();
+
+  let lastMessageDate;
+  const diffTime = Math.abs(new Date() - new Date(lastMessageCreatedAt));
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  const hours = Math.round(diffTime / 1000 / 60 / 60);
+  const minutes = Math.round(diffTime / 1000 / 60);
+  if (diffDays <= 1) {
+    if (minutes >= 60) {
+      lastMessageDate = hours + 'h';
+    } else {
+      if (minutes === 0) {
+        lastMessageDate = 'now';
+      } else {
+        lastMessageDate = minutes + 'm';
+      }
+    }
+  } else {
+    lastMessageDate = new Date(lastMessageCreatedAt).toLocaleDateString();
+  }
+
   const currentUser = users.find((user) => user._id !== authId);
   return (
     <Stack as={Link} to={`${urls.chats}/${_id}`} direction="row" padding="12px">

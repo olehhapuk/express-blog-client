@@ -35,6 +35,7 @@ function ChatEditor({ onCreate }) {
   }
   function createMessage() {
     onCreate({ body: text });
+    setText('');
   }
   return (
     <Stack>

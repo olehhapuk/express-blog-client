@@ -83,15 +83,18 @@ function Chat() {
     console.log(message);
   }
 
-  function onMessageRead(message) {
+  function onMessageRead(messages) {
     console.log(chatId);
     setMessages((prev) => {
       return prev.map((msg) => {
-        if (msg._id === message._id) {
-          return message;
-        } else {
-          return msg;
-        }
+        let newMessage = msg;
+
+        messages.forEach((message) => {
+          if (msg._id === message._id) {
+            newMessage = message;
+          }
+        });
+        return newMessage;
       });
     });
   }
@@ -101,7 +104,8 @@ function Chat() {
   }, [chatId]);
 
   function getMessages() {
-    socket.emit('messages:all', chatId, (messages) => {
+    socket.emit('messages:all', chatId, user._id, (messages) => {
+      console.log(messages);
       setMessages(messages);
     });
   }

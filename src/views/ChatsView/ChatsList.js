@@ -21,6 +21,25 @@ function ChatsList() {
     });
   }
 
+  useEffect(() => {
+    socket.on('chat:updated', onChatUpdated);
+    return () => {
+      socket.off('chat:updated', onChatUpdated);
+    };
+  }, []);
+
+  function onChatUpdated(chat) {
+    setChats((prev) => {
+      return prev.map((prevChat) => {
+        if (prevChat._id === chat._id) {
+          return chat;
+        } else {
+          return prevChat;
+        }
+      });
+    });
+  }
+
   return (
     <Stack borderWidth="1px" borderRadius="lg" padding="8px 6px">
       {chats.length === 0 && (
