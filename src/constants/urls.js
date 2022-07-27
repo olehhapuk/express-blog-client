@@ -9,4 +9,5 @@ export const urls = {
   post: '/post',
   search: '/search',
   chats: '/chats',
+  verify: '/verify',
 };

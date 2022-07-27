@@ -1,6 +1,6 @@
 import { lazy } from 'react';
-import { urls } from '../constants/urls';
 
+import { urls } from '../constants/urls';
 import * as AuthGate from './AuthGate';
 
 const HomeView = lazy(() => import('../views/HomeView'));
@@ -13,6 +13,7 @@ const EditPostView = lazy(() => import('../views/EditPostView'));
 const PostView = lazy(() => import('../views/PostView'));
 const SearchView = lazy(() => import('../views/SearchView'));
 const ChatsView = lazy(() => import('../views/ChatsView'));
+const VerifyView = lazy(() => import('../views/VerifyView'));
 
 export const routes = [
   {
@@ -96,6 +97,16 @@ export const routes = [
     element: (
       <AuthGate.AuthRequired>
         <ChatsView />
+      </AuthGate.AuthRequired>
+    ),
+  },
+  {
+    key: 'verify',
+    path: urls.verify,
+    exact: true,
+    element: (
+      <AuthGate.AuthRequired>
+        <VerifyView />
       </AuthGate.AuthRequired>
     ),
   },

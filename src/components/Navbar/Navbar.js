@@ -11,6 +11,7 @@ import Dropdown from './Dropdown';
 
 function Navbar() {
   const isAuthenticated = useSelector(authSelectors.isAuthenticated);
+  const user = useSelector(authSelectors.getUser);
 
   const navigate = useNavigate();
 
@@ -31,13 +32,26 @@ function Navbar() {
 
           {isAuthenticated ? (
             <HStack spacing={2}>
-              <IconButton as={Link} to={urls.chats}>
-                <ChatIcon />
-              </IconButton>
+              {user.verificated ? (
+                <>
+                  <IconButton as={Link} to={urls.chats}>
+                    <ChatIcon />
+                  </IconButton>
 
-              <Button colorScheme="blue" as={Link} to={urls.createPost}>
-                Create Post
-              </Button>
+                  <Button
+                    colorScheme="blue"
+                    as={Link}
+                    to={urls.createPost}
+                    disabled={!user.verificated}
+                  >
+                    Create Post
+                  </Button>
+                </>
+              ) : (
+                <Button colorScheme="blue" as={Link} to={urls.verify}>
+                  Verify Account
+                </Button>
+              )}
 
               <Dropdown />
             </HStack>
