@@ -33,7 +33,7 @@ function TagInput({ selectedTags, setSelectedTags }) {
         search: value,
       },
     }).then((res) => {
-      setSearchTags(res.data);
+      setSearchTags(res.data.tags);
     });
   }, [value]);
 
