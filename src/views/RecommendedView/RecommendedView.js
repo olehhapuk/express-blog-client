@@ -38,7 +38,7 @@ function postsReducer(state, { type, payload }) {
   }
 }
 
-function HomeView() {
+function RecommendedView() {
   const [postsLoading, setPostsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [likeLoadingId, setLikeLoadingId] = useState(null);
@@ -53,10 +53,7 @@ function HomeView() {
 
     axios({
       method: 'GET',
-      url: '/posts',
-      params: {
-        sortBy: 'createdAt'
-      }
+      url: '/posts/recommended',
     })
       .then((res) => postsDispatch({ type: 'SET', payload: res.data.posts }))
       .catch((error) => setError(error))
@@ -126,4 +123,4 @@ function HomeView() {
   );
 }
 
-export default HomeView;
+export default RecommendedView;

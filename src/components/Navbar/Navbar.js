@@ -27,13 +27,13 @@ function Navbar() {
             <HStack spacing={2}>
               {user.verificated ? (
                 <>
-                  <IconButton as={Link} to={urls.chats}>
+                  <IconButton as={RLink} to={urls.chats}>
                     <ChatIcon />
                   </IconButton>
 
                   <Button
                     colorScheme="blue"
-                    as={Link}
+                    as={RLink}
                     to={urls.createPost}
                     disabled={!user.verificated}
                   >
@@ -41,7 +41,7 @@ function Navbar() {
                   </Button>
                 </>
               ) : (
-                <Button colorScheme="blue" as={Link} to={urls.verify}>
+                <Button colorScheme="blue" as={RLink} to={urls.verify}>
                   Verify Account
                 </Button>
               )}
@@ -53,12 +53,12 @@ function Navbar() {
               <Button
                 colorScheme="blue"
                 variant="outline"
-                as={Link}
+                as={RLink}
                 to={urls.login}
               >
                 Login
               </Button>
-              <Button colorScheme="blue" as={Link} to={urls.register}>
+              <Button colorScheme="blue" as={RLink} to={urls.register}>
                 Register
               </Button>
             </HStack>

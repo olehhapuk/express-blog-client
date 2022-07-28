@@ -10,4 +10,5 @@ export const urls = {
   search: '/search',
   chats: '/chats',
   verify: '/verify',
+  recommended: '/recommended',
 };

@@ -14,6 +14,7 @@ const PostView = lazy(() => import('../views/PostView'));
 const SearchView = lazy(() => import('../views/SearchView'));
 const ChatsView = lazy(() => import('../views/ChatsView'));
 const VerifyView = lazy(() => import('../views/VerifyView'));
+const RecommendedView = lazy(() => import('../views/RecommendedView'));
 
 export const routes = [
   {
@@ -107,6 +108,16 @@ export const routes = [
     element: (
       <AuthGate.AuthRequired>
         <VerifyView />
+      </AuthGate.AuthRequired>
+    ),
+  },
+  {
+    key: 'recommended',
+    path: urls.recommended,
+    exact: true,
+    element: (
+      <AuthGate.AuthRequired>
+        <RecommendedView />
       </AuthGate.AuthRequired>
     ),
   },
