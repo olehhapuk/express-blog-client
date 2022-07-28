@@ -11,11 +11,12 @@ import {
   Button,
 } from '@chakra-ui/react';
 import { useDispatch } from 'react-redux';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import qs from 'query-string';
 
-import { PostsList } from '../../components';
+import { PostsList, Searchbar } from '../../components';
 import { authOperations } from '../../redux/auth';
+import { urls } from '../../constants/urls';
 
 function postsReducer(state, { type, payload }) {
   switch (type) {
@@ -60,6 +61,15 @@ function SearchView() {
 
   const { search } = useLocation();
   const searchParams = qs.parse(search);
+  
+  const navigate = useNavigate();
+
+  function handleSearch(searchQuery) {
+    const queryString = qs.stringify({
+      search: searchQuery,
+    });
+    navigate(`${urls.search}?${queryString}`);
+  }
 
   useEffect(() => {
     return () => {
@@ -149,6 +159,11 @@ function SearchView() {
           <AlertDescription>{error.response?.data.message}</AlertDescription>
         </Alert>
       )}
+
+      <Flex justifyContent="center" marginBottom="5">
+        <Searchbar onSearch={handleSearch} />
+      </Flex>
+
       {posts.length > 0 && !error && (
         <PostsList
           posts={posts}

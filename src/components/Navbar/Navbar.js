@@ -1,34 +1,27 @@
-import { Box, Button, HStack, Container, IconButton } from '@chakra-ui/react';
+import { Box, Button, HStack, Container, IconButton, Link, Image } from '@chakra-ui/react';
 import { ChatIcon } from '@chakra-ui/icons';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link as RLink } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import qs from 'query-string';
 
 import { urls } from '../../constants/urls';
 import { authSelectors } from '../../redux/auth';
-import Searchbar from './Searchbar';
 import Dropdown from './Dropdown';
 
 function Navbar() {
   const isAuthenticated = useSelector(authSelectors.isAuthenticated);
   const user = useSelector(authSelectors.getUser);
 
-  const navigate = useNavigate();
-
-  function search(searchQuery) {
-    const queryString = qs.stringify({
-      search: searchQuery,
-    });
-    navigate(`${urls.search}?${queryString}`);
-  }
-
   return (
     <Box as="nav" py={5}>
       <Container maxW="container.xl">
         <HStack justify="space-between">
-          <Link to={urls.home}>Express Blog</Link>
-
-          <Searchbar onSearch={search} />
+          <HStack>
+            <Link as={RLink} to={urls.home} display="block">
+              <Image src="/Frame_rfzdtc-cropped.svg" alt="Logo" height="44px" />
+            </Link>
+            <Link as={RLink} to={'recommended'}>Discover</Link>
+            <Link as={RLink} to={urls.search}>Search</Link>
+          </HStack>
 
           {isAuthenticated ? (
             <HStack spacing={2}>

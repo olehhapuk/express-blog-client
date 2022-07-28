@@ -6,3 +6,4 @@ export { default as PostsList } from './PostsList';
 export { default as PostItem } from './PostItem';
 export { default as TagsList } from './TagsList';
 export { default as ImageUploader } from './ImageUploader';
+export { default as Searchbar } from './Searchbar';
