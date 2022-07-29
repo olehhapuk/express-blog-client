@@ -6,6 +6,7 @@ import {
   Heading,
   Text,
   Icon,
+  useColorMode
 } from '@chakra-ui/react';
 import { BsReply, BsHeart, BsHeartFill, BsTrash } from 'react-icons/bs';
 import axios from 'axios';
@@ -21,6 +22,8 @@ function CommentItem({ comment, onReply, onLiked, onDelete, onError }) {
 
   const user = useSelector(authSelectors.getUser);
   const isAuthenticated = useSelector(authSelectors.isAuthenticated);
+
+  const { colorMode } = useColorMode();
 
   const isLiked =
     comment &&
@@ -49,7 +52,7 @@ function CommentItem({ comment, onReply, onLiked, onDelete, onError }) {
   }
 
   return (
-    <Box border="1px" borderRadius="lg" borderColor="gray.300" p={3}>
+    <Box border="1px" borderRadius="lg" borderColor={colorMode === 'light' ? "gray.300" : 'gray.700'} p={3}>
       {comment && (
         <>
           <HStack justify="space-between">

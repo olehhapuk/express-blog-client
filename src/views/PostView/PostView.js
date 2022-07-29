@@ -12,14 +12,16 @@ import {
   AlertDescription,
   Stack,
   IconButton,
+  Divider,
+  useColorMode
 } from '@chakra-ui/react';
 import axios from 'axios';
-import { sanitize } from 'dompurify';
-import { marked } from 'marked';
 import { useState, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import { BsX } from 'react-icons/bs';
 import { useDispatch } from 'react-redux';
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 
 import CommentsList from './CommentsList';
 import CreateCommentForm from './CreateCommentForm';
@@ -64,6 +66,12 @@ function PostView() {
   const dispatch = useDispatch();
 
   const inputRef = useRef();
+
+  const { colorMode } = useColorMode();
+
+  useEffect(() => {
+    // import(`github-markdown-css/github-markdown-${colorMode}.css`);
+  }, [colorMode]);
 
   useEffect(fetchPost, [postId]);
 
@@ -164,14 +172,10 @@ function PostView() {
           <AuthorCard {...data.author} onFollow={follow} />
 
           <Heading size="xl">{data.title}</Heading>
+          <Text fontSize="md" color="GrayText">{new Date(data.createdAt).toLocaleDateString()}</Text>
           <TagsList tags={data.tags} />
-          <Text
-            className="markdown-body"
-            dangerouslySetInnerHTML={{
-              __html: sanitize(marked.parse(data.body)),
-            }}
-          />
-          <hr />
+          <ReactMarkdown remarkPlugins={[remarkGfm]} className={`markdown-css ${colorMode}`}>{data.body}</ReactMarkdown>
+          <Divider />
           <Heading size="md">Comments</Heading>
           {replyToComment && (
             <HStack>

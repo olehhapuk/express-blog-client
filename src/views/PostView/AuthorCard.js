@@ -6,6 +6,7 @@ import {
   Stack,
   Avatar,
   Text,
+  useColorMode
 } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
@@ -24,12 +25,13 @@ function AuthorCard({
 }) {
   const user = useSelector(authSelectors.getUser);
   const isAuthenticated = useSelector(authSelectors.isAuthenticated);
+  const { colorMode } = useColorMode();
 
   const isAuthor = user && user._id === _id;
   const isFollowing = user && user.following.includes(_id);
 
   return (
-    <Box border="1px" borderRadius="lg" borderColor="gray.300" p={3}>
+    <Box border="1px" borderRadius="lg" borderColor={colorMode === 'light' ? "gray.300" : 'gray.700'} p={3}>
       <HStack justify="space-between">
         <HStack spacing={3}>
           <Avatar src={avatarUrl} />

@@ -44,7 +44,7 @@ function ChatsList() {
   return (
     <Stack borderWidth="1px" borderRadius="lg" padding="8px 6px">
       {chats.length === 0 && (
-        <Heading as="h3" size="lg" textAlign="center" color="blackAlpha.400">
+        <Heading as="h3" size="lg" textAlign="center" color="GrayText">
           No chats
         </Heading>
       )}

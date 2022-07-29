@@ -144,8 +144,9 @@ function ProfileView() {
 
   function createChat() {
     //console.log(`Creating chat with ${userId}`);
-    socket.emit('chat:create', userId, authUser._id, () => {
-      navigate('/chats');
+    socket.emit('chat:create', userId, authUser._id, (res) => {
+      console.log(res);
+      navigate(`/chats/${res._id}`);
     });
   }
 

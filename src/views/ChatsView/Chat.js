@@ -120,7 +120,7 @@ function Chat() {
     >
       <Stack ref={messagesListRef} width="100%" height="100%" overflowY="auto">
         {messages.length === 0 && (
-          <Heading as="h3" size="lg" textAlign="center" color="blackAlpha.400">
+          <Heading as="h3" size="lg" textAlign="center" color="GrayText">
             Say hi!
           </Heading>
         )}

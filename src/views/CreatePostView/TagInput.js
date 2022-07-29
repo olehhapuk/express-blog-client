@@ -8,6 +8,8 @@ import {
   TagLabel,
   FormHelperText,
   Kbd,
+  useTheme,
+  useColorMode
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
@@ -22,6 +24,11 @@ import {
 function TagInput({ selectedTags, setSelectedTags }) {
   const [searchTags, setSearchTags] = useState([]);
   const [value, setValue] = useState('');
+
+  const theme = useTheme();
+  const { colorMode } = useColorMode();
+
+  console.log(theme);
 
   useEffect(() => {
     if (value === '') return;
@@ -80,12 +87,12 @@ function TagInput({ selectedTags, setSelectedTags }) {
           value={value}
           onChange={handleChange}
         />
-        <ComboboxPopover>
-          <ComboboxList>
+        <ComboboxPopover className={colorMode}>
+          <ComboboxList className={colorMode}>
             {searchTags
               .filter((tag) => !selectedTags.includes(tag.name))
               .map((tag) => (
-                <ComboboxOption key={tag._id} value={tag.name} />
+                <ComboboxOption key={tag._id} value={tag.name} className={colorMode} />
               ))}
           </ComboboxList>
         </ComboboxPopover>

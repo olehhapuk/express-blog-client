@@ -30,7 +30,7 @@ function VerifyView() {
   function verify(e) {
     e.preventDefault();
 
-    const codeTest = new RegExp(/^[0-9]{4,4}$/);
+    const codeTest = new RegExp(/^[0-9]{5,5}$/);
     const valid = codeTest.test(code);
     setValidationError(valid ? null : 'Pattern should be m-000000');
     if (!valid) {
@@ -73,6 +73,7 @@ function VerifyView() {
               required
               isInvalid={validationError}
             >
+              <PinInputField />
               <PinInputField />
               <PinInputField />
               <PinInputField />
