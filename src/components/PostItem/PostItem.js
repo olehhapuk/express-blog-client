@@ -31,6 +31,7 @@ function PostItem({
   onLike,
   onReadLater,
   onDelete,
+  createdAt,
 }) {
   const user = useSelector(authSelectors.getUser);
   const isAuthenticated = useSelector(authSelectors.isAuthenticated);
@@ -40,6 +41,8 @@ function PostItem({
     user && user.readingList.find((post) => post._id === _id);
   const isAuthor = user && user._id === author._id;
 
+  const creationDate = new Date(createdAt).toLocaleDateString();
+
   return (
     <LinkBox
       as="article"
@@ -48,11 +51,25 @@ function PostItem({
       textAlign="left"
       overflow="hidden"
     >
-      {thumbnailUrl && <Image src={thumbnailUrl} alt={title} width="100%" />}
+      {thumbnailUrl && (
+        <Image
+          src={thumbnailUrl}
+          alt={title}
+          width="100%"
+          maxHeight="350px"
+          objectFit="cover"
+          objectPosition="center"
+        />
+      )}
       <Stack spacing={2} padding={3}>
         <HStack justify="space-between">
           <LinkOverlay as={Link} to={`${urls.post}/${_id}`}>
-            <Heading size="lg">{title}</Heading>
+            <Heading size="lg" marginBottom={1}>
+              {title}
+            </Heading>
+            <Text fontSize="sm" color="GrayText">
+              {creationDate}
+            </Text>
           </LinkOverlay>
           <HStack>
             {isAuthor && (

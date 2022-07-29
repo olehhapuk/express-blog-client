@@ -9,6 +9,8 @@ import {
   AlertTitle,
   AlertDescription,
   Button,
+  Heading,
+  Divider,
 } from '@chakra-ui/react';
 import { useDispatch } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -61,14 +63,27 @@ function SearchView() {
 
   const { search } = useLocation();
   const searchParams = qs.parse(search);
-  
+
   const navigate = useNavigate();
 
-  function handleSearch(searchQuery) {
+  function handleSearch({
+    search,
+    tagsInclude,
+    tagsExclude,
+    sortBy,
+    sortOrder,
+  }) {
     const queryString = qs.stringify({
-      search: searchQuery,
+      search,
+      tagsInclude: tagsInclude.join(', '),
+      tagsExclude: tagsExclude.join(', '),
+      sortBy,
+      sortOrder,
     });
     navigate(`${urls.search}?${queryString}`);
+
+    postsDispatch({ type: 'CLEAR' });
+    setActivePage({ value: 1 });
   }
 
   useEffect(() => {
@@ -76,15 +91,6 @@ function SearchView() {
       mounted = false;
     };
   }, []);
-
-  useEffect(() => {
-    if (mounted) {
-      postsDispatch({ type: 'CLEAR' });
-      setActivePage({ value: 1 });
-    } else {
-      mounted = true;
-    }
-  }, [searchParams.search]);
 
   useEffect(() => {
     fetchPosts();
@@ -101,6 +107,10 @@ function SearchView() {
         search: searchParams.search,
         page: activePage.value,
         perPage: 24,
+        tagsInclude: searchParams.tagsInclude,
+        tagsExclude: searchParams.tagsExclude,
+        sortBy: searchParams.sortBy,
+        sortOrder: searchParams.sortOrder,
       },
     })
       .then((res) => {
@@ -147,6 +157,10 @@ function SearchView() {
 
   return (
     <Container maxWidth="container.md">
+      <Heading mb={5} textAlign="center">
+        Search
+      </Heading>
+
       {postsLoading && (
         <Flex justifyContent="center">
           <CircularProgress isIndeterminate />
@@ -163,6 +177,10 @@ function SearchView() {
       <Flex justifyContent="center" marginBottom="5">
         <Searchbar onSearch={handleSearch} />
       </Flex>
+
+      <Heading mb={2} textAlign="center" size="lg">
+        Results
+      </Heading>
 
       {posts.length > 0 && !error && (
         <PostsList
