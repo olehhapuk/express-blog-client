@@ -1,6 +1,6 @@
 import { Box, Button, HStack, Container, IconButton, Link, Image } from '@chakra-ui/react';
 import { ChatIcon } from '@chakra-ui/icons';
-import { Link as RLink } from 'react-router-dom';
+import { Link as RLink, useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 import { urls } from '../../constants/urls';
@@ -11,6 +11,8 @@ function Navbar() {
   const isAuthenticated = useSelector(authSelectors.isAuthenticated);
   const user = useSelector(authSelectors.getUser);
 
+  const location = useLocation();
+
   return (
     <Box as="nav" py={5}>
       <Container maxW="container.xl">
@@ -19,8 +21,8 @@ function Navbar() {
             <Link as={RLink} to={urls.home} display="block">
               <Image src="/Frame_rfzdtc-cropped.svg" alt="Logo" height="44px" />
             </Link>
-            <Link as={RLink} to={'recommended'}>Discover</Link>
-            <Link as={RLink} to={urls.search}>Search</Link>
+            <Button as={RLink} to={urls.recommended} variant={location.pathname === urls.recommended ? 'solid' : 'ghost'}>Discover</Button>
+            <Button as={RLink} to={urls.search} variant={location.pathname === urls.search ? 'solid' : 'ghost'}>Search</Button>
           </HStack>
 
           {isAuthenticated ? (
