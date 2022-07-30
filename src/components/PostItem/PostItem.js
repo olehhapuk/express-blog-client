@@ -104,7 +104,7 @@ function PostItem({
 
         <HStack justify="space-between">
           <HStack alignItems="center">
-            {isAuthenticated ? (
+            {isAuthenticated && user.verificated ? (
               <IconButton
                 onClick={() => onLike(_id)}
                 isLoading={likeLoadingId === _id}
@@ -116,7 +116,7 @@ function PostItem({
               <Icon as={BsHeart} m={2} />
             )}
           </HStack>
-          {isAuthenticated && (
+          {isAuthenticated && user.verificated && (
             <Button
               variant="outline"
               onClick={() => onReadLater(_id)}

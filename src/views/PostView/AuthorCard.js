@@ -52,7 +52,7 @@ function AuthorCard({
           </Stack>
         </HStack>
 
-        {isAuthenticated && !isAuthor && (
+        {isAuthenticated && user.verificated && !isAuthor && (
           <Button
             colorScheme={isFollowing ? 'gray' : 'blue'}
             onClick={onFollow}

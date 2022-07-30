@@ -22,16 +22,31 @@ import {
   AlertDescription,
   Button,
   IconButton,
+  Icon,
 } from '@chakra-ui/react';
 import { ChatIcon } from '@chakra-ui/icons';
 import axios from 'axios';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import { BsGithub } from 'react-icons/bs';
 
 import { PostsList } from '../../components';
 import { authOperations, authSelectors } from '../../redux/auth';
 import { urls } from '../../constants/urls';
 import { socket } from '../../config/socket';
+
+function getAge(dateString) 
+{
+    const today = new Date();
+    const birthDate = new Date(dateString);
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const m = today.getMonth() - birthDate.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) 
+    {
+        age--;
+    }
+    return age;
+}
 
 function ProfileView() {
   const { userId } = useParams();
@@ -186,7 +201,11 @@ function ProfileView() {
             />
 
             <Heading>{userData.fullName}</Heading>
-            <Text>{userData.description}</Text>
+            {userData.description && <Text>{userData.description}</Text>}
+            {userData.location && <Text>Location: {userData.location}</Text>}
+            {userData.work && <Text>Work: {userData.work}</Text>}
+            {userData.hobby && <Text>Hobby: {userData.hobby}</Text>}
+            {userData.birthDate && <Text>Age: {getAge(userData.birthDate)}</Text>}
 
             <StatGroup w="200px">
               <Stat>
@@ -199,29 +218,41 @@ function ProfileView() {
               </Stat>
             </StatGroup>
 
-            {isAuthUser ? (
-              <Button
-                as={Link}
-                to={`${urls.editProfile}/${userId}`}
-                colorScheme="blue"
-              >
-                Edit Profile
-              </Button>
-            ) : (
-              <Stack direction="row">
-                <Button
-                  colorScheme="blue"
-                  onClick={follow}
-                  isLoading={followLoading}
-                  disabled={!isAuthenticated}
-                >
-                  {isFollowing ? 'Unfollow' : 'Follow'}
-                </Button>
-                <IconButton onClick={createChat}>
-                  <ChatIcon />
+            <Stack direction="row">
+              {userData.githubUrl && (
+                <IconButton as="a" href={userData.githubUrl} target="_blank">
+                  <Icon as={BsGithub} />
                 </IconButton>
-              </Stack>
-            )}
+              )}
+
+              {isAuthUser ? (
+                <Button
+                  as={Link}
+                  to={`${urls.editProfile}/${userId}`}
+                  colorScheme="blue"
+                  disabled={!authUser.verificated}
+                >
+                  Edit Profile
+                </Button>
+              ) : (
+                <>
+                  <Button
+                    colorScheme="blue"
+                    onClick={follow}
+                    isLoading={followLoading}
+                    disabled={!isAuthenticated || !authUser.verificated}
+                  >
+                    {isFollowing ? 'Unfollow' : 'Follow'}
+                  </Button>
+                  <IconButton
+                    onClick={createChat}
+                    disabled={!isAuthenticated || !authUser.verificated}
+                  >
+                    <ChatIcon />
+                  </IconButton>
+                </>
+              )}
+            </Stack>
 
             <Tabs
               index={tabIndex}

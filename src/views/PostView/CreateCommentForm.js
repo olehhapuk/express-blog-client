@@ -26,6 +26,7 @@ function CreateCommentForm({ onSubmit, inputRef }) {
   });
 
   const isAuthenticated = useSelector(authSelectors.isAuthenticated);
+  const user = useSelector(authSelectors.getUser);
 
   return (
     <form onSubmit={formik.handleSubmit}>
@@ -43,14 +44,14 @@ function CreateCommentForm({ onSubmit, inputRef }) {
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             required
-            disabled={!isAuthenticated}
+            disabled={!isAuthenticated || !user.verificated}
           />
           {formik.errors.text && formik.touched.text && (
             <FormHelperText>{formik.errors.text}</FormHelperText>
           )}
         </FormControl>
 
-        <Button type="submit" colorScheme="blue" disabled={!isAuthenticated}>
+        <Button type="submit" colorScheme="blue" disabled={!isAuthenticated || !user.verificated}>
           Create
         </Button>
       </Stack>
