@@ -43,17 +43,6 @@ function Chat() {
   }, [messages, messagesListRef]);
 
   useEffect(() => {
-    window.onkeydown = (e) => {
-      if (e.key === '1') {
-        setMessages((prev) => [
-          ...prev,
-          { _id: prev.length + 1, isMine: false },
-        ]);
-      }
-    };
-  }, []);
-
-  useEffect(() => {
     socket.on('message:create', onMessageReceived);
     return () => {
       socket.off('message:create', onMessageReceived);

@@ -12,6 +12,7 @@ function ChatItem({
   messages,
   authId,
   createdAt,
+  isActive,
 }) {
   const lastMessageCreatedAt = lastMessage ? lastMessage.createdAt : createdAt;
   const [lastMessageDate, setLastMessageDate] = useState('now');
@@ -37,7 +38,14 @@ function ChatItem({
 
   const currentUser = users.find((user) => user._id !== authId);
   return (
-    <Stack as={Link} to={`${urls.chats}/${_id}`} direction="row" padding="12px">
+    <Stack
+      as={Link}
+      to={`${urls.chats}/${_id}`}
+      direction="row"
+      padding="12px"
+      backgroundColor={isActive ? 'whiteAlpha.100' : 'transparent'}
+      position="relative"
+    >
       <Box marginRight="8px" width="64px" height="64px" flexShrink="0">
         <Image
           src={currentUser.avatarUrl}

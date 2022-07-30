@@ -15,7 +15,7 @@ function ChatsView() {
     <Container maxWidth="container.xl">
       <Grid templateColumns="350px 1fr" gap="12px">
         <GridItem>
-          <ChatsList />
+          <ChatsList activeChat={chatId} />
         </GridItem>
 
         <Routes>

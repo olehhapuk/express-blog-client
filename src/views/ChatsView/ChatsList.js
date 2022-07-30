@@ -1,12 +1,13 @@
 import { Stack, Heading } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+
 import { socket } from '../../config/socket';
 import { authOperations, authSelectors } from '../../redux/auth';
 
 import ChatItem from './ChatItem';
 
-function ChatsList() {
+function ChatsList({ activeChat }) {
   const [chats, setChats] = useState([]);
   const authUser = useSelector(authSelectors.getUser);
 
@@ -42,7 +43,7 @@ function ChatsList() {
   }
 
   return (
-    <Stack borderWidth="1px" borderRadius="lg" padding="8px 6px">
+    <Stack borderWidth="1px" borderRadius="lg">
       {chats.length === 0 && (
         <Heading as="h3" size="lg" textAlign="center" color="GrayText">
           No chats
@@ -50,7 +51,7 @@ function ChatsList() {
       )}
 
       {chats.map((chat) => (
-        <ChatItem key={chat._id} {...chat} authId={authUser._id} />
+        <ChatItem key={chat._id} {...chat} authId={authUser._id} isActive={activeChat === chat._id} />
       ))}
     </Stack>
   );

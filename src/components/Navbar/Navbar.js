@@ -1,4 +1,11 @@
-import { Box, Button, HStack, Container, IconButton, Link, Image, useColorMode } from '@chakra-ui/react';
+import {
+  Box,
+  Button,
+  HStack,
+  Container,
+  IconButton,
+  useColorMode,
+} from '@chakra-ui/react';
 import { ChatIcon, SunIcon, MoonIcon } from '@chakra-ui/icons';
 import { Link as RLink, useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
@@ -23,15 +30,32 @@ function Navbar() {
         <HStack justify="space-between">
           <HStack>
             <Logo />
-            <Button as={RLink} to={urls.recommended} variant={location.pathname === urls.recommended ? 'solid' : 'ghost'}>Discover</Button>
-            <Button as={RLink} to={urls.search} variant={location.pathname === urls.search ? 'solid' : 'ghost'}>Search</Button>
+            <Button
+              as={RLink}
+              to={urls.recommended}
+              variant={
+                location.pathname === urls.recommended ? 'solid' : 'ghost'
+              }
+            >
+              Discover
+            </Button>
+            <Button
+              as={RLink}
+              to={urls.search}
+              variant={location.pathname === urls.search ? 'solid' : 'ghost'}
+            >
+              Search
+            </Button>
           </HStack>
 
           {isAuthenticated ? (
             <HStack spacing={2}>
               {user.verificated ? (
                 <>
-                  <IconButton onClick={toggleColorMode} icon={colorMode === 'light' ? <SunIcon /> : <MoonIcon />} />
+                  <IconButton
+                    onClick={toggleColorMode}
+                    icon={colorMode === 'light' ? <SunIcon /> : <MoonIcon />}
+                  />
                   <Notifications />
                   <IconButton as={RLink} to={urls.chats}>
                     <ChatIcon />
